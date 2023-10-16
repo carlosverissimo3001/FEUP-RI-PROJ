@@ -1,0 +1,24 @@
+[1.217s] Invoking command in '/home/kaduver4/ros2_ws/build/my_controller': PYTHONPATH=/home/kaduver4/ros2_ws/build/my_controller/prefix_override:/home/kaduver4/ros2_ws/install/my_controller/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py develop --editable --build-directory /home/kaduver4/ros2_ws/build/my_controller/build --no-deps install_data
+[1.550s] running develop
+[1.750s] running egg_info
+[1.751s] creating my_controller.egg-info
+[1.751s] writing my_controller.egg-info/PKG-INFO
+[1.751s] writing dependency_links to my_controller.egg-info/dependency_links.txt
+[1.751s] writing entry points to my_controller.egg-info/entry_points.txt
+[1.751s] writing requirements to my_controller.egg-info/requires.txt
+[1.752s] writing top-level names to my_controller.egg-info/top_level.txt
+[1.752s] writing manifest file 'my_controller.egg-info/SOURCES.txt'
+[1.753s] reading manifest file 'my_controller.egg-info/SOURCES.txt'
+[1.754s] writing manifest file 'my_controller.egg-info/SOURCES.txt'
+[1.755s] running build_ext
+[1.755s] Creating /home/kaduver4/ros2_ws/install/my_controller/lib/python3.10/site-packages/my-controller.egg-link (link to .)
+[1.756s] Installing controller_node script to /home/kaduver4/ros2_ws/install/my_controller/lib/my_controller
+[1.757s] 
+[1.757s] Installed /home/kaduver4/ros2_ws/build/my_controller
+[1.757s] running install_data
+[1.757s] creating /home/kaduver4/ros2_ws/install/my_controller/share/ament_index
+[1.757s] creating /home/kaduver4/ros2_ws/install/my_controller/share/ament_index/resource_index
+[1.758s] creating /home/kaduver4/ros2_ws/install/my_controller/share/ament_index/resource_index/packages
+[1.758s] copying resource/my_controller -> /home/kaduver4/ros2_ws/install/my_controller/share/ament_index/resource_index/packages
+[1.758s] copying package.xml -> /home/kaduver4/ros2_ws/install/my_controller/share/my_controller
+[1.804s] Invoked command in '/home/kaduver4/ros2_ws/build/my_controller' returned '0': PYTHONPATH=/home/kaduver4/ros2_ws/build/my_controller/prefix_override:/home/kaduver4/ros2_ws/install/my_controller/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py develop --editable --build-directory /home/kaduver4/ros2_ws/build/my_controller/build --no-deps install_data

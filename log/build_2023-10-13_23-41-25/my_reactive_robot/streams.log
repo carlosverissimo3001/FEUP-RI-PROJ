@@ -1,0 +1,25 @@
+[0.242s] Invoking command in '/home/kaduver4/ros2_ws/build/my_reactive_robot': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/kaduver4/ros2_ws/install/my_robot_controller:/opt/ros/humble /usr/bin/cmake --build /home/kaduver4/ros2_ws/build/my_reactive_robot -- -j8 -l8
+[0.292s] -- Found ament_cmake: 1.3.5 (/opt/ros/humble/share/ament_cmake/cmake)
+[0.644s] -- Override CMake install command with custom implementation using symlinks instead of copying resources
+[0.658s] -- Found ament_lint_auto: 0.12.8 (/opt/ros/humble/share/ament_lint_auto/cmake)
+[0.837s] -- Added test 'flake8' to check Python code syntax and style conventions
+[0.838s] -- Added test 'lint_cmake' to check CMake code style
+[0.839s] -- Added test 'pep257' to check Python code against some of the docstring style conventions in PEP 257
+[0.842s] -- Added test 'xmllint' to check XML markup files
+[0.843s] -- Configuring done
+[0.849s] -- Generating done
+[0.851s] -- Build files have been written to: /home/kaduver4/ros2_ws/build/my_reactive_robot
+[0.898s] Invoked command in '/home/kaduver4/ros2_ws/build/my_reactive_robot' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/kaduver4/ros2_ws/install/my_robot_controller:/opt/ros/humble /usr/bin/cmake --build /home/kaduver4/ros2_ws/build/my_reactive_robot -- -j8 -l8
+[0.970s] Invoking command in '/home/kaduver4/ros2_ws/build/my_reactive_robot': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/kaduver4/ros2_ws/install/my_robot_controller:/opt/ros/humble /usr/bin/cmake --install /home/kaduver4/ros2_ws/build/my_reactive_robot
+[0.987s] -- Install configuration: ""
+[0.988s] -- Execute custom install script
+[0.988s] -- Symlinking: /home/kaduver4/ros2_ws/install/my_reactive_robot/share/my_reactive_robot/launch/my_gazebo.launch.py
+[1.006s] [31mCMake Error at ament_cmake_symlink_install/ament_cmake_symlink_install.cmake:100 (message):
+[1.007s]   ament_cmake_symlink_install_directory() can't find
+[1.007s]   '/home/kaduver4/ros2_ws/src/my_reactive_robot/config'
+[1.007s] Call Stack (most recent call first):
+[1.007s]   ament_cmake_symlink_install/ament_cmake_symlink_install.cmake:314 (ament_cmake_symlink_install_directory)
+[1.007s]   cmake_install.cmake:46 (include)
+[1.007s] 
+[1.007s] [0m
+[1.011s] Invoked command in '/home/kaduver4/ros2_ws/build/my_reactive_robot' returned '1': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/kaduver4/ros2_ws/install/my_robot_controller:/opt/ros/humble /usr/bin/cmake --install /home/kaduver4/ros2_ws/build/my_reactive_robot

@@ -1,0 +1,39 @@
+[0.106s] Invoking command in '/home/kaduver4/ros2_ws/build/my_reactive_robot': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake --build /home/kaduver4/ros2_ws/build/my_reactive_robot -- -j8 -l8
+[0.210s] Invoked command in '/home/kaduver4/ros2_ws/build/my_reactive_robot' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake --build /home/kaduver4/ros2_ws/build/my_reactive_robot -- -j8 -l8
+[0.253s] Invoking command in '/home/kaduver4/ros2_ws/build/my_reactive_robot': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake --install /home/kaduver4/ros2_ws/build/my_reactive_robot
+[0.265s] -- Install configuration: ""
+[0.266s] -- Execute custom install script
+[0.266s] -- Up-to-date symlink: /home/kaduver4/ros2_ws/install/my_reactive_robot/share/my_reactive_robot/launch/hail_mary.launch.py
+[0.266s] -- Symlinking: /home/kaduver4/ros2_ws/install/my_reactive_robot/share/my_reactive_robot/launch/my_final.launch.py
+[0.280s] -- Up-to-date symlink: /home/kaduver4/ros2_ws/install/my_reactive_robot/share/my_reactive_robot/launch/my_gazebo.launch.py
+[0.280s] -- Up-to-date symlink: /home/kaduver4/ros2_ws/install/my_reactive_robot/share/my_reactive_robot/launch/my_gazebo.launch.xml
+[0.280s] -- Up-to-date symlink: /home/kaduver4/ros2_ws/install/my_reactive_robot/share/my_reactive_robot/launch/test.launch.py
+[0.281s] -- Up-to-date symlink: /home/kaduver4/ros2_ws/install/my_reactive_robot/share/my_reactive_robot/meshes/bases/burger_base.stl
+[0.281s] -- Up-to-date symlink: /home/kaduver4/ros2_ws/install/my_reactive_robot/share/my_reactive_robot/meshes/bases/waffle_base.stl
+[0.282s] -- Up-to-date symlink: /home/kaduver4/ros2_ws/install/my_reactive_robot/share/my_reactive_robot/meshes/bases/waffle_pi_base.stl
+[0.282s] -- Up-to-date symlink: /home/kaduver4/ros2_ws/install/my_reactive_robot/share/my_reactive_robot/meshes/sensors/astra.dae
+[0.282s] -- Up-to-date symlink: /home/kaduver4/ros2_ws/install/my_reactive_robot/share/my_reactive_robot/meshes/sensors/astra.jpg
+[0.282s] -- Up-to-date symlink: /home/kaduver4/ros2_ws/install/my_reactive_robot/share/my_reactive_robot/meshes/sensors/lds.stl
+[0.282s] -- Up-to-date symlink: /home/kaduver4/ros2_ws/install/my_reactive_robot/share/my_reactive_robot/meshes/sensors/r200.dae
+[0.283s] -- Up-to-date symlink: /home/kaduver4/ros2_ws/install/my_reactive_robot/share/my_reactive_robot/meshes/sensors/r200.jpg
+[0.283s] -- Up-to-date symlink: /home/kaduver4/ros2_ws/install/my_reactive_robot/share/my_reactive_robot/meshes/wheels/left_tire.stl
+[0.283s] -- Up-to-date symlink: /home/kaduver4/ros2_ws/install/my_reactive_robot/share/my_reactive_robot/meshes/wheels/right_tire.stl
+[0.283s] -- Up-to-date symlink: /home/kaduver4/ros2_ws/install/my_reactive_robot/share/my_reactive_robot/worlds/my_world.world
+[0.284s] -- Up-to-date symlink: /home/kaduver4/ros2_ws/install/my_reactive_robot/share/my_reactive_robot/urdf/my_round_robot.xacro.urdf
+[0.284s] -- Up-to-date symlink: /home/kaduver4/ros2_ws/install/my_reactive_robot/share/my_reactive_robot/rviz/rviz_basic_settings.rviz
+[0.284s] -- Up-to-date symlink: /home/kaduver4/ros2_ws/install/my_reactive_robot/share/ament_index/resource_index/package_run_dependencies/my_reactive_robot
+[0.285s] -- Up-to-date symlink: /home/kaduver4/ros2_ws/install/my_reactive_robot/share/ament_index/resource_index/parent_prefix_path/my_reactive_robot
+[0.285s] -- Up-to-date symlink: /home/kaduver4/ros2_ws/install/my_reactive_robot/share/my_reactive_robot/environment/ament_prefix_path.sh
+[0.285s] -- Up-to-date symlink: /home/kaduver4/ros2_ws/install/my_reactive_robot/share/my_reactive_robot/environment/ament_prefix_path.dsv
+[0.285s] -- Up-to-date symlink: /home/kaduver4/ros2_ws/install/my_reactive_robot/share/my_reactive_robot/environment/path.sh
+[0.286s] -- Up-to-date symlink: /home/kaduver4/ros2_ws/install/my_reactive_robot/share/my_reactive_robot/environment/path.dsv
+[0.286s] -- Up-to-date symlink: /home/kaduver4/ros2_ws/install/my_reactive_robot/share/my_reactive_robot/local_setup.bash
+[0.286s] -- Up-to-date symlink: /home/kaduver4/ros2_ws/install/my_reactive_robot/share/my_reactive_robot/local_setup.sh
+[0.286s] -- Up-to-date symlink: /home/kaduver4/ros2_ws/install/my_reactive_robot/share/my_reactive_robot/local_setup.zsh
+[0.286s] -- Up-to-date symlink: /home/kaduver4/ros2_ws/install/my_reactive_robot/share/my_reactive_robot/local_setup.dsv
+[0.287s] -- Symlinking: /home/kaduver4/ros2_ws/install/my_reactive_robot/share/my_reactive_robot/package.dsv
+[0.301s] -- Up-to-date symlink: /home/kaduver4/ros2_ws/install/my_reactive_robot/share/ament_index/resource_index/packages/my_reactive_robot
+[0.301s] -- Up-to-date symlink: /home/kaduver4/ros2_ws/install/my_reactive_robot/share/my_reactive_robot/cmake/my_reactive_robotConfig.cmake
+[0.301s] -- Up-to-date symlink: /home/kaduver4/ros2_ws/install/my_reactive_robot/share/my_reactive_robot/cmake/my_reactive_robotConfig-version.cmake
+[0.301s] -- Up-to-date symlink: /home/kaduver4/ros2_ws/install/my_reactive_robot/share/my_reactive_robot/package.xml
+[0.304s] Invoked command in '/home/kaduver4/ros2_ws/build/my_reactive_robot' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake --install /home/kaduver4/ros2_ws/build/my_reactive_robot

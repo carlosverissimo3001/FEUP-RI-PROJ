@@ -1,0 +1,1 @@
+/home/kaduver4/ros2_ws/src/build/my_reactive_robot/ament_cmake_core/my_reactive_robotConfig.cmake
