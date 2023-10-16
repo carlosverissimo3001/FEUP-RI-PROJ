@@ -1,3 +1,0 @@
-[1.122s] Invoking command in '/home/kaduver4/ros2_ws/build/my_controller': PYTHONPATH=/home/kaduver4/ros2_ws/build/my_controller/prefix_override:/home/kaduver4/ros2_ws/install/my_controller/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py develop --uninstall --editable --build-directory /home/kaduver4/ros2_ws/build/my_controller/build
-[1.454s] running develop
-[1.653s] Removing /home/kaduver4/ros2_ws/install/my_controller/lib/python3.10/site-packages/my-controller.egg-link (link to .)
