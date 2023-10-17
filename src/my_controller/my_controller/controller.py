@@ -25,21 +25,16 @@ class ScanToVelocityNode(Node):
         # create a dictionair, if the value is from 0 to 60, then it's on the left
         # if the value is from 60 to 120, then it's in the front, you get it
         self.directions = {
-            "east" : list(range(0, 22)) + list(range(337, 360)),
-            "northeast" : range(22, 67),
-            "north" : range(67, 112),
-            "northwest" : range(112, 157),
-            "west" : range(157, 202),
-            "southwest" : range(202, 247),
-            "south" : range(247, 292),
-            "southeast" : range(292, 337),
+            "front" : list(range(0, 22)) + list(range(337, 360)),
+            "front-top" : range(22, 67),
+            "top" : range(67, 112),
+            "top-back" : range(112, 157),
+            "back" : range(157, 202),
+            "back-bottom" : range(202, 247),
+            "bottom" : range(247, 292),
+            "bottom-front" : range(292, 337),
         } 
 
-        # given a direction, spit out the angular velocity needed to turn away from it
-        self.turn_angles = {
-            "east" : 1.0
-        }
-        
         # Subscribe to the /scan topic
         self.subscription = self.create_subscription(
             LaserScan,
@@ -52,12 +47,16 @@ class ScanToVelocityNode(Node):
         # Create a publisher for the /cmd_vel topic
         self.publisher = self.create_publisher(Twist, '/cmd_vel', 10)
 
-    def check_end_condition(self, scan_data):
-        # Check if the robot stopped sensing obstacles,the min range is .inf
-        if math.isinf(min(scan_data.ranges)):
-            print("No obstacles detected")
+    # If there are no walls around, assume we're lost
+    def am_i_lost(self, scan_data):
+        # Check if the robot stopped sensing obstacles
 
-        return True
+        # If the minimum and maximum range are both infinity, then we're lost
+        if (math.isinf(min(scan_data.ranges)) and math.isinf(max(scan_data.ranges))):
+            print("I'm lost")
+            return True
+        
+        return False
     
     
     def get_angular_speed_for_turn(self, direction):
@@ -86,7 +85,12 @@ class ScanToVelocityNode(Node):
         cmd_vel = Twist()
         cmd_vel.linear.x, cmd_vel.angular.z = 0.0, 0.0
 
-        # hit a wall?
+        # lost?
+        if self.am_i_lost(scan_msg):
+            print("I'm lost, gonna do a 360")
+            cmd_vel.angular.z = 0.5
+            self.publisher.publish(cmd_vel)
+            return
 
         # Still not close enough to an obstacle, so keep wandering
         if min(scan_msg.ranges) > approach_threshold:

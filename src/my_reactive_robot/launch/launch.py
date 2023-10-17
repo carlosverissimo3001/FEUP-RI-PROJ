@@ -22,7 +22,7 @@ import math
 
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
-from launch.actions import IncludeLaunchDescription
+from launch.actions import IncludeLaunchDescription, ExecuteProcess
 from launch_ros.actions import Node
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration
@@ -65,8 +65,12 @@ def generate_launch_description():
         PythonLaunchDescriptionSource(
             os.path.join(pkg_gazebo_ros, 'launch', 'gzserver.launch.py')
         ),
-        launch_arguments={'world': world}.items()
+        launch_arguments={
+            'world': world, 
+            'pause': "true"
+        }.items()
     )
+
 
     # Start the Gazebo client
     gzclient_cmd = IncludeLaunchDescription(
@@ -96,11 +100,9 @@ def generate_launch_description():
 
     # Start the controller node (my_reactive_robot_controller package)
     # ros2 run my_controller controller_
-    controller_cmd = Node(
-        package='my_controller',
-        executable='controller',
-        name='controller_node',
-        output='screen'
+    controller_cmd = ExecuteProcess(
+        cmd = ['ros2', 'run', 'my_controller', 'controller_node'],
+        shell=True,
     )
 
 
@@ -111,6 +113,8 @@ def generate_launch_description():
     ld.add_action(gzclient_cmd)
     ld.add_action(robot_state_publisher_cmd)
     ld.add_action(spawn_turtlebot_cmd)
+    
+    # keep this comment, run in a seperate terminal: ros2 run my_controller controller_node to see the output
     # ld.add_action(controller_cmd)
 
     print(spawn_turtlebot_cmd)
