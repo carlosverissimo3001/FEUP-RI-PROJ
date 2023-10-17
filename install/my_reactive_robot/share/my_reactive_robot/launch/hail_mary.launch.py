@@ -1,1 +1,0 @@
-/home/kaduver4/ros2_ws/src/my_reactive_robot/launch/hail_mary.launch.py
