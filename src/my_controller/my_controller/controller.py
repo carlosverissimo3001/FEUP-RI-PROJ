@@ -6,7 +6,9 @@
 # one way to solve this, is too first wander until you get close to an obstacle
 
 import rclpy
+import time
 import math
+import random
 from rclpy.node import Node
 from geometry_msgs.msg import Twist
 from sensor_msgs.msg import LaserScan
@@ -31,6 +33,32 @@ DEBUG_MODE = True
 def debug_print(string):
     if DEBUG_MODE:
         print(string)
+
+class SpinRandomlyNode(Node):
+    def __init__(self):
+        super().__init__('spin_randomly_node')
+
+        # Subscribe to the /scan topic
+        self.subscription = self.create_subscription(
+            LaserScan,
+            '/scan',
+            self.scan_callback,
+            10  # QoS profile, adjust as needed
+        )
+        self.subscription  # Prevent unused variable warning
+
+        # Create a publisher for the /cmd_vel topic
+        self.publisher = self.create_publisher(Twist, '/cmd_vel', 10)
+
+    def scan_callback(self, scan_msg: LaserScan):
+        cmd_vel = Twist()
+        
+        # just spin randomly
+        cmd_vel.linear.x = 0.0;
+        cmd_vel.angular.z = float(random.uniform(-1, 1))
+
+        # Publish the message
+        self.publisher.publish(cmd_vel)
 
 class ScanToVelocityNode(Node):
     def __init__(self):
@@ -223,6 +251,17 @@ class ScanToVelocityNode(Node):
 
 def main(args=None):
     rclpy.init(args=args)
+
+    # spin randomly first,
+    node = SpinRandomlyNode()
+    rclpy.spin_once(node)
+    rclpy.shutdown()
+
+    # spin for 5 seconds
+    time.sleep(5)
+
+    rclpy.init(args=args)
+    # then proceed normal operation
     node = ScanToVelocityNode()
     rclpy.spin(node)
     rclpy.shutdown()

@@ -70,7 +70,7 @@ def generate_launch_description():
         ),
         launch_arguments={
             'world': world, 
-            'pause': 'True'
+            'pause': 'true'
         }.items()
     )
 
@@ -107,7 +107,6 @@ def generate_launch_description():
         cmd = ['ros2', 'run', 'my_controller', 'controller_node'],
         shell=True,
     )
-
 
     ld = LaunchDescription()
 
