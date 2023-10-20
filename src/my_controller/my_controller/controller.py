@@ -12,12 +12,17 @@ from geometry_msgs.msg import Twist
 from sensor_msgs.msg import LaserScan
 
 # Constants
-APPROACH_THRESHOLD = 0.75
+APPROACH_THRESHOLD = 1.0
 MAX_LINEAR_VELOCITY = 0.22
 MAX_ANGULAR_VELOCITY = 2.84
 NORMAL_LINEAR_VELOCITY = 0.1
 NORMAL_ANGULAR_VELOCITY = 0.75
 
+WALL_LENGTH = 2.25
+WALL_LENGTH_ERROR = 0.1 * WALL_LENGTH
+
+SCAN_FRONT = 0
+SCAN_FRONT_LEFT = 45
 SCAN_LEFT = 90
 ERROR_OFFSET = 0.01
 
@@ -67,15 +72,44 @@ class ScanToVelocityNode(Node):
         
         return False
     
-    
-    def get_angular_speed_for_turn(self, direction):
-        # Calculate the angular speed based on the direction of the obstacle
-        # If an object is to the left, turn right, and so on
-        # TODO: implement this
+    def check_final_position(self, ranges):
+        # Get the indexes of the sensors with data
+        indexes = [x for x in range(len(ranges)) if not math.isinf(ranges[x])]
         
-        return 0.0
+        # get indexes
+        leftest_sensor = min(indexes)    
+        rightest_sensor = max(indexes)
+    
+        # get distances
+        leftest_sensor_dist = ranges[leftest_sensor]
+        rightest_sensor_dist = ranges[rightest_sensor]
+
+        if abs(leftest_sensor_dist - rightest_sensor_dist) > 10 * ERROR_OFFSET:
+            return False
         
 
+        middle_angle = abs(leftest_sensor - rightest_sensor)
+        left_angle = (180 - middle_angle) / 2
+        right_angle = (180 - middle_angle) / 2
+
+
+        if (middle_angle > 180):
+            return False
+
+        wall_length = leftest_sensor_dist * math.sin(math.radians(middle_angle)) / math.sin(math.radians(left_angle))
+
+        print("Wall length: ", wall_length)
+
+        if abs(wall_length - WALL_LENGTH) < WALL_LENGTH_ERROR:
+            print("Found the ending spot")
+            return True
+
+        return False
+
+        #print("Min index: ", min_index)
+        #print("Max index: ", max_index)
+
+        
     def get_closest_wall_direction(self, scan_data):
         # get the index of the closest obstacle
         min_range_index = scan_data.ranges.index(min(scan_data.ranges))
@@ -85,29 +119,23 @@ class ScanToVelocityNode(Node):
             if min_range_index in self.directions[direction]:
                 return direction
 
-    def get_closest_wall_degree(self, scan_data):
+    def get_closest_wall_degree(self, ranges):
         # get the index of the closest obstacle
-        return scan_data.ranges.index(min(scan_data.ranges))
+        return ranges.index(min(ranges))
     
     def follow_wall(self, ranges):
         print("\nInside follow_wall")
 
         if math.isinf(ranges[SCAN_LEFT]):
+            closest_sensor = self.get_closest_wall_degree(ranges)
+            print("Closest wall index: ", closest_sensor)
             print("Left sensor data is inf")
-            # Robot positioning is bad
-            # should rotate in order for the left side to face the wall 
-            print("rotate right")
-            return 0.0, NORMAL_ANGULAR_VELOCITY
-        
-        print("Distance to the wall: ", ranges[SCAN_LEFT])
-        
-        """ # if the left sensor is too far away from the wall
-        if ranges[SCAN_LEFT] > 2 * APPROACH_THRESHOLD:
-            # too close to the wall 
-            # rotate right
-            print("rotate right")
-            return NORMAL_LINEAR_VELOCITY, NORMAL_ANGULAR_VELOCITY """
-        
+
+            if closest_sensor > 270 or closest_sensor < 90: 
+                return 0.0, -1 * NORMAL_ANGULAR_VELOCITY
+            
+            return 0.0, NORMAL_ANGULAR_VELOCITY            
+                            
         # if the left sensor is too close to the wall
         if ranges[SCAN_LEFT] < 0.5 * APPROACH_THRESHOLD:
             # rotate left
@@ -140,7 +168,11 @@ class ScanToVelocityNode(Node):
         cmd_vel = Twist()
         cmd_vel.linear.x, cmd_vel.angular.z = 0.0, 0.0
 
-        # print("Data from left sensor: ", scan_msg.ranges[SCAN_LEFT])
+        # am i at the end?
+        if self.check_final_position(scan_msg.ranges):
+            # do a 360
+            self.publisher.publish(cmd_vel)
+            return
 
         # lost?
         if self.am_i_lost(scan_msg):
@@ -155,7 +187,7 @@ class ScanToVelocityNode(Node):
             # find out where the closest obstacle is, in terms of cardinal direction
             obstacle_direction = self.get_closest_wall_direction(scan_msg)
 
-            closest_sensor = self.get_closest_wall_degree(scan_msg)
+            closest_sensor = self.get_closest_wall_degree(scan_msg.ranges)
             print("Closest wall index: ", closest_sensor)
 
             # Closest wall is in front of us, so go straight
