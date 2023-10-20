@@ -36,22 +36,25 @@ def generate_random_coordinates(center_x, center_y, radius):
     # Calculate x and y coordinates based on polar coordinates
     x = round(center_x + r * math.cos(angle), 1)
     y = round(center_y + r * math.sin(angle), 1)
-    
-    return x, y
+
+    # return x, y
+    return str(x), str(y)
 
 
 def generate_launch_description():
-    launch_file_dir = os.path.join(get_package_share_directory('turtlebot3_gazebo'), 'launch')
+    pkg_turtlebot3_gazebo = os.path.join(get_package_share_directory('turtlebot3_gazebo'), 'launch')
     pkg_gazebo_ros = get_package_share_directory('gazebo_ros')
 
     use_sim_time = LaunchConfiguration('use_sim_time', default='true')
 
 
-    x_pose = LaunchConfiguration('x_pose', default='2')
-    y_pose = LaunchConfiguration('y_pose', default='2.5')
+    #x_pose = LaunchConfiguration('x_pose', default='2')
+    #y_pose = LaunchConfiguration('y_pose', default='2.5')
 
+    x_pose, y_pose = generate_random_coordinates(2, 2.5, 1)
 
-    #print("Spawning turtlebot at x: {}, y: {}".format(x_pose, y_pose))
+    print("Spawning turtlebot at x: {}, y: {}".format(x_pose, y_pose))
+    print("Using sim time: {}".format(use_sim_time))    
 
     # Get the path to the world file
     world = os.path.join(
@@ -67,7 +70,7 @@ def generate_launch_description():
         ),
         launch_arguments={
             'world': world, 
-            'pause': "true"
+            'pause': 'True'
         }.items()
     )
 
@@ -82,7 +85,7 @@ def generate_launch_description():
     # Publish the robot state
     robot_state_publisher_cmd = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
-            os.path.join(launch_file_dir, 'robot_state_publisher.launch.py')
+            os.path.join(pkg_turtlebot3_gazebo, 'robot_state_publisher.launch.py')
         ),
         launch_arguments={'use_sim_time': use_sim_time}.items()
     )
@@ -90,7 +93,7 @@ def generate_launch_description():
     # Spawn the turtlebot at the generated coordinates
     spawn_turtlebot_cmd = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
-            os.path.join(launch_file_dir, 'spawn_turtlebot3.launch.py')
+            os.path.join(pkg_turtlebot3_gazebo, 'spawn_turtlebot3.launch.py')
         ),
         launch_arguments={
             'x_pose': x_pose,

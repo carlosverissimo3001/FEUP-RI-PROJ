@@ -12,19 +12,16 @@ from geometry_msgs.msg import Twist
 from sensor_msgs.msg import LaserScan
 
 # Constants
-APPROACH_THRESHOLD = 0.5
+APPROACH_THRESHOLD = 0.75
 MAX_LINEAR_VELOCITY = 0.22
 MAX_ANGULAR_VELOCITY = 2.84
 NORMAL_LINEAR_VELOCITY = 0.1
-NORMAL_ANGULAR_VELOCITY = 0.5
+NORMAL_ANGULAR_VELOCITY = 0.75
 
 SCAN_LEFT = 90
 ERROR_OFFSET = 0.01
 
 DEBUG_MODE = True
-
-wall_kp = 0.1
-approach_multiplier = 2.0
 
 def debug_print(string):
     if DEBUG_MODE:
@@ -65,7 +62,7 @@ class ScanToVelocityNode(Node):
 
         # If the minimum and maximum range are both infinity, then we're lost
         if (math.isinf(min(scan_data.ranges)) and math.isinf(max(scan_data.ranges))):
-            debug_print("I'm lost")
+            print("I'm lost")
             return True
         
         return False
@@ -92,98 +89,99 @@ class ScanToVelocityNode(Node):
         # get the index of the closest obstacle
         return scan_data.ranges.index(min(scan_data.ranges))
     
-    def follow_wall(self, scan_data):
-        debug_print("Inside follow_wall")
+    def follow_wall(self, ranges):
+        print("\nInside follow_wall")
 
-        if math.isinf(scan_data[SCAN_LEFT]):
+        if math.isinf(ranges[SCAN_LEFT]):
+            print("Left sensor data is inf")
             # Robot positioning is bad
             # should rotate in order for the left side to face the wall 
-            debug_print("rotate right")
-            return 0, NORMAL_ANGULAR_VELOCITY
-
-        left_dist = scan_data[SCAN_LEFT] - APPROACH_THRESHOLD
-
-        if abs(left_dist) > ERROR_OFFSET:
-            # Robot positioning is bad
-            # should go foward and rotate in order to move closer to the wall
-
-            if left_dist < 0:
-                # too close to the wall 
-                # rotate right
-                debug_print("rotate right")
-                return NORMAL_LINEAR_VELOCITY, NORMAL_ANGULAR_VELOCITY
-            
-            # too far from the wall 
+            print("rotate right")
+            return 0.0, NORMAL_ANGULAR_VELOCITY
+        
+        print("Distance to the wall: ", ranges[SCAN_LEFT])
+        
+        """ # if the left sensor is too far away from the wall
+        if ranges[SCAN_LEFT] > 2 * APPROACH_THRESHOLD:
+            # too close to the wall 
+            # rotate right
+            print("rotate right")
+            return NORMAL_LINEAR_VELOCITY, NORMAL_ANGULAR_VELOCITY """
+        
+        # if the left sensor is too close to the wall
+        if ranges[SCAN_LEFT] < 0.5 * APPROACH_THRESHOLD:
             # rotate left
-            debug_print("rotate left")
+            print("rotate left")
             return NORMAL_LINEAR_VELOCITY, -1 * NORMAL_ANGULAR_VELOCITY
-            
-        parallel_to_wall = scan_data[SCAN_LEFT - 1] - scan_data[SCAN_LEFT + 1] < ERROR_OFFSET  
+
+
+        parallel_to_wall = abs(ranges[SCAN_LEFT - 1] - ranges[SCAN_LEFT + 1]) < ERROR_OFFSET  
 
         if parallel_to_wall:
             # all good, keep going
-            debug_print("all good, keep going")
-            return NORMAL_LINEAR_VELOCITY, 0
+            print("all good, keep going")
+            return 2 * NORMAL_LINEAR_VELOCITY, 0.0
         
         # Robot positioning is bad
         # should go foward and rotate in order to move closer to the wall
 
-        if scan_data[SCAN_LEFT - 1] > scan_data[SCAN_LEFT + 1]:
+        if ranges[SCAN_LEFT - 1] > ranges[SCAN_LEFT + 1]:
             # rotate right
-            debug_print("rotate right")
+            print("rotate right")
             return NORMAL_LINEAR_VELOCITY, NORMAL_ANGULAR_VELOCITY
         
         # rotate left
-        debug_print("rotate left")
+        print("rotate left")
         return NORMAL_LINEAR_VELOCITY, -1 * NORMAL_ANGULAR_VELOCITY
-        
-
+    
 
 
     def scan_callback(self, scan_msg: LaserScan):
         cmd_vel = Twist()
         cmd_vel.linear.x, cmd_vel.angular.z = 0.0, 0.0
 
+        # print("Data from left sensor: ", scan_msg.ranges[SCAN_LEFT])
+
         # lost?
         if self.am_i_lost(scan_msg):
-            debug_print("I'm lost")
+            print("I'm lost")
             cmd_vel.linear.x = NORMAL_LINEAR_VELOCITY
             self.publisher.publish(cmd_vel)
             return
 
         # Still not close enough to an obstacle, so keep wandering
         if min(scan_msg.ranges) > APPROACH_THRESHOLD:
+            print("\nGoing straight")
             # find out where the closest obstacle is, in terms of cardinal direction
             obstacle_direction = self.get_closest_wall_direction(scan_msg)
 
-            debug_print("The closest obstacle is to the", obstacle_direction, 
-                  " at ", round(min(scan_msg.ranges),2), "meters", 
-                  "degree: ", self.get_closest_wall_degree(scan_msg))
+            closest_sensor = self.get_closest_wall_degree(scan_msg)
+            print("Closest wall index: ", closest_sensor)
+
+            # Closest wall is in front of us, so go straight
+            if closest_sensor in self.directions["front"]:
+                cmd_vel.linear.x = 2 * NORMAL_LINEAR_VELOCITY
+                self.publisher.publish(cmd_vel)
+                return
+        
+            # Closest wall is to the left, so turn right
+            if closest_sensor > 180:
+                cmd_vel.angular.z = -1 * NORMAL_ANGULAR_VELOCITY
             
-            debug_print("Approaching it slowly")
-
+            # Closest wall is to the right, so turn left
+            else:
+                cmd_vel.angular.z = NORMAL_ANGULAR_VELOCITY
+            
             # Go straight, but realllly slow
-            cmd_vel.linear.x = 0.1
-
+            cmd_vel.linear.x = NORMAL_LINEAR_VELOCITY
 
         # ok, we're close to an obstacle, so let's follow it
         else:
-            debug_print ("Wall detected, trying to follow it")
+            print ("Close wall detected, trying to follow it")
 
-            cmd_vel.linear.x, cmd_vel.angular.z = self.follow_wall(scan_msg)
-
-            """
-            Rafa - Imo apagava isto mas pode dar jeito idk
-
-            # get the direction of the closest obstacle
-            obstacle_direction = self.get_closest_wall_direction(scan_msg)
-
-            # calculate the angle needed to avoid the obstacle and keep a safe distance
-            cmd_vel.angular.z = wall_kp * (approach_multiplier * min(scan_msg.ranges) - 0.5)
-
-            # safe to go straight
-            cmd_vel.linear.x = 0.05
-            """
+            cmd_vel.linear.x, cmd_vel.angular.z = self.follow_wall(scan_msg.ranges)
+            self.publisher.publish(cmd_vel)
+            return
 
         # Apply safety limits to linear and angular velocities
         cmd_vel.linear.x = min(MAX_LINEAR_VELOCITY, cmd_vel.linear.x)
