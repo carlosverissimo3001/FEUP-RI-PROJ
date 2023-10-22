@@ -12,6 +12,7 @@ import random
 from rclpy.node import Node
 from geometry_msgs.msg import Twist
 from sensor_msgs.msg import LaserScan
+from nav_msgs.msg import Odometry
 
 # Constants
 APPROACH_THRESHOLD = 1.0
@@ -33,6 +34,27 @@ DEBUG_MODE = True
 def debug_print(string):
     if DEBUG_MODE:
         print(string)
+
+class GetInitialYawNode(Node):
+    def __init__(self):
+        super().__init__('get_initial_yaw_node')
+
+        # Subscrive to /odom topic to get the initial yaw
+        self.subscription = self.create_subscription(
+            Odometry,
+            '/odom',
+            self.odom_callback,
+            10  # QoS profile, adjust as needed
+        )
+
+        self.subscription  # Prevent unused variable warning
+
+    def odom_callback(self, odom_msg: Odometry):
+        # get the initial yaw -> pose.orientation.z
+        initial_yaw = odom_msg.pose.pose.orientation.z
+
+        print("Initial yaw: ", initial_yaw)
+        return initial_yaw
 
 class SpinRandomlyNode(Node):
     def __init__(self):
@@ -75,7 +97,10 @@ class ScanToVelocityNode(Node):
             "back-bottom" : range(202, 247),
             "bottom" : range(247, 292),
             "bottom-front" : range(292, 337),
-        } 
+        }
+
+        self.start_time = 0
+        self.end_time = 0 
 
         # Subscribe to the /scan topic
         self.subscription = self.create_subscription(
@@ -130,6 +155,11 @@ class ScanToVelocityNode(Node):
 
         if abs(wall_length - WALL_LENGTH) < WALL_LENGTH_ERROR:
             print("Found the ending spot")
+            
+            # stop counting time
+            if (self.end_time == 0):
+                self.end_time = time.time()
+
             return True
 
         return False
@@ -198,7 +228,10 @@ class ScanToVelocityNode(Node):
 
         # am i at the end?
         if self.check_final_position(scan_msg.ranges):
-            # do a 360
+            
+            print("Time elapsed: ", self.end_time - self.start_time)
+            
+            # do nothing
             self.publisher.publish(cmd_vel)
             return
 
@@ -260,9 +293,16 @@ def main(args=None):
     # spin for 5 seconds
     time.sleep(5)
 
+    # get the initial yaw
     rclpy.init(args=args)
+    node = GetInitialYawNode()
+    rclpy.spin_once(node)
+    rclpy.shutdown()
+    
     # then proceed normal operation
+    rclpy.init(args=args)
     node = ScanToVelocityNode()
+    node.start_time = time.time()
     rclpy.spin(node)
     rclpy.shutdown()
 
