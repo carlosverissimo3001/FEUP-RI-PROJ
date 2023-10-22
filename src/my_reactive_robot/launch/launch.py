@@ -27,6 +27,9 @@ from launch_ros.actions import Node
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration
 
+def prGreen(skk): 
+    print("\033[92m {}\033[00m" .format(skk))
+
 def generate_random_coordinates(center_x, center_y, radius):
     # Generate random angles for polar coordinates
     angle = random.uniform(0, 2 * math.pi)
@@ -53,8 +56,7 @@ def generate_launch_description():
 
     x_pose, y_pose = generate_random_coordinates(2, 2.5, 1)
 
-    print("Spawning turtlebot at x: {}, y: {}".format(x_pose, y_pose))
-    print("Using sim time: {}".format(use_sim_time))    
+    prGreen("Spawning turtlebot at x: {}, y: {}".format(x_pose, y_pose))
 
     # Get the path to the world file
     world = os.path.join(

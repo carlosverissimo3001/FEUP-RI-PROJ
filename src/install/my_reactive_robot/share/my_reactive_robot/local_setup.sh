@@ -1,1 +1,0 @@
-/home/kaduver4/ros2_ws/src/build/my_reactive_robot/ament_cmake_environment_hooks/local_setup.sh
