@@ -37,8 +37,8 @@ def generate_random_coordinates(center_x, center_y, radius):
     r = random.uniform(0, radius)
     
     # Calculate x and y coordinates based on polar coordinates
-    x = round(center_x + r * math.cos(angle), 1)
-    y = round(center_y + r * math.sin(angle), 1)
+    x = round(center_x + r * math.cos(angle), 2)
+    y = round(center_y + r * math.sin(angle), 2)
 
     # return x, y
     return str(x), str(y)
