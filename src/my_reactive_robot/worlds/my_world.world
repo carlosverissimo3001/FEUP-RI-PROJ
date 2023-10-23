@@ -2210,10 +2210,10 @@
       <static>1</static>
     </model>
     <state world_name='default'>
-      <sim_time>161 458000000</sim_time>
-      <real_time>0 0</real_time>
-      <wall_time>1697987202 202240750</wall_time>
-      <iterations>0</iterations>
+      <sim_time>172 374000000</sim_time>
+      <real_time>10 946629621</real_time>
+      <wall_time>1698009315 765901464</wall_time>
+      <iterations>10916</iterations>
       <model name='ground_plane'>
         <pose>0 0 0 0 -0 0</pose>
         <scale>1 1 1</scale>

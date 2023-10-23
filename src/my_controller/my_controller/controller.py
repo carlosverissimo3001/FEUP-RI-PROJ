@@ -78,7 +78,7 @@ class SpinRandomlyNode(Node):
         # just spin randomly
         cmd_vel.linear.x = 0.0;
         cmd_vel.angular.z = float(random.uniform(-1, 1))
-
+        
         # Publish the message
         self.publisher.publish(cmd_vel)
 
@@ -283,21 +283,20 @@ class ScanToVelocityNode(Node):
         self.publisher.publish(cmd_vel)
 
 def main(args=None):
+    """ # spin randomly first,
     rclpy.init(args=args)
-
-    # spin randomly first,
     node = SpinRandomlyNode()
     rclpy.spin_once(node)
     rclpy.shutdown()
 
-    # spin for 5 seconds
-    time.sleep(5)
+    # for 5 seconds
+    time.sleep(5) """
 
     # get the initial yaw
-    rclpy.init(args=args)
+    """ rclpy.init(args=args)
     node = GetInitialYawNode()
     rclpy.spin_once(node)
-    rclpy.shutdown()
+    rclpy.shutdown() """
     
     # then proceed normal operation
     rclpy.init(args=args)

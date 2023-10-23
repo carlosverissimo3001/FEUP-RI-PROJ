@@ -54,8 +54,9 @@ def generate_launch_description():
     #x_pose = LaunchConfiguration('x_pose', default='2')
     #y_pose = LaunchConfiguration('y_pose', default='2.5')
 
-    x_pose, y_pose = generate_random_coordinates(2, 2.5, 1)
-
+    #x_pose, y_pose = generate_random_coordinates(2, 2.5, 1)
+    x_pose, y_pose = str(1.62), str(2.67) 
+    
     prGreen("Spawning turtlebot at x: {}, y: {}".format(x_pose, y_pose))
 
     # Get the path to the world file
