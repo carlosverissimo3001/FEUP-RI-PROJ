@@ -255,7 +255,7 @@ We have ran two different experiments:
 
 \subsection{Experiment 1}
 
-In order to test how the robot's starting orientation affects the loop-time, we have ran the simulation 11 times, only changing the yaw (orientation at z) values, that range from -1 to 1, with a step of 0.2.
+In order to test how the robot's starting orientation affects the loop-time, we have ran the simulation 10 times, only changing the yaw (orientation at z) values, that range from -1 to 1, with a step of 0.2.
 
 The table below shows the loop time in regards to the yaw value.
 
@@ -291,13 +291,11 @@ This result aligns with our expectations, based on the design of our robot's con
 
 The goal of this experiment was to analyse how much of an effect the initial position of the robot relatively to the closest wall affects it's overall travel time.
 
-As expected, the robot reaches the end position faster when it spawns closer to the wall. 
-This is due to the fact that the robot doesn't need to move as much to reach the wall, and therefore it doesn't need to rotate as much at the beginning.
+As observable in table \ref{table: exp2}, the worst runs are the 6th and 7th runs, to no surprise, as these runs are the ones where the robot spawns in a way that puts the top wall as the closest wall to the robot.
 
-As observable in table \ref{table: exp2}, the worst runs are the 6th and 7th runs, to no surprise, as these runs are the ones where the robot spawns in a way that puts the top wall as the closest wall to the robot,
-either because the x value is too low or the y value is too high.
+The fastest runs, on the other hand, are the 4th and 9th runs, where the robot spawns in a way that puts the right/bottom walls as the closest walls to the robot.
 
-The fastest runs, on the other hand, are the 4th and 9th runs, where the robot spawns in a way that puts the right wall as the closest wall to the robot.
+The behavior is more clearly depicted through the heat map shown in Figure \ref{fig:position_heat_map}.
 
 \section{Conclusions and Future Work}
 
@@ -395,7 +393,7 @@ Finally, We would also like to extend our gratitude to the authors of the ROS pa
 %% CHANGE TO HEATMAP
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.4\textwidth]{images/heatMap_position.png}
+    \includegraphics[width=0.45\textwidth]{images/heatMap_position.png}
     \caption{How the initial position affects time taken in seconds}
     \label{fig:position_heat_map}
 \end{figure}
