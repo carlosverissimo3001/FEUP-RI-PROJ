@@ -13,11 +13,11 @@ background_image = plt.imread("world.png")
 plt.figure(figsize=(10, 10))
 
 # Display the background image
-plt.imshow(background_image, extent=(-2.5, 5.5, -4.0, 5.75))
+plt.imshow(background_image, extent=(-4.5, 7, -8, 8))
 
 # Create the heat map
 plt.scatter(positionExperimentData.loc[:, 'X'], positionExperimentData.loc[:, 'Y'],
-            c=positionExperimentData.loc[:, 'Time'], cmap='viridis', marker='s', s=100)
+            c=positionExperimentData.loc[:, 'Time'], cmap='viridis', marker='s', s=100, plotnonfinite=True)
 
 # Add a colorbar for reference
 plt.colorbar(label='Time Taken')
