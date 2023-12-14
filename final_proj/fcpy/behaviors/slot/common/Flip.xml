@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<behavior name="Flip" type="SlotBehavior" description="Flip from sides before getting up" auto_head="0">
+    <slot name="0" delta="0.30">
+        <move id="14" angle="-120"/>
+        <move id="15" angle="-120"/>
+    </slot>
+    <slot name="1" delta="0.30">
+        <move id="16" angle="80"/>
+        <move id="17" angle="80"/>
+    </slot>
+</behavior>
