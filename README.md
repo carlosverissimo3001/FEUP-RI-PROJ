@@ -41,7 +41,7 @@ Two ROS packages were created, `my_reactive_robot` and `my_controller`.
 
 ### my_reactive_robot
 
-This package is responsible for spawning the robot in the world and running the simulation. The [launch file](src/my_reactive_robot/launch/launch.py) is an adaptation from the file `turtlebot3_world.launch` from the package `turtlebot3_gazebo`.
+This package is responsible for spawning the robot in the world and running the simulation. The [launch file](assign1/src/my_reactive_robot/launch/launch.py) is an adaptation from the file `turtlebot3_world.launch` from the package `turtlebot3_gazebo`.
 
 Four commands are launched:
 
@@ -50,11 +50,11 @@ Four commands are launched:
 - `robot_state_publisher_cmd` publishes the state of the robot
 - `spawn_turtlebot3_cmd` Spawns the robot in the world
 
-The [world file](src/my_reactive_robot/worlds/my_world.world) is a custom world that was created using the Gazebo GUI.
+The [world file](assign1/src/my_reactive_robot/worlds/my_world.world) is a custom world that was created using the Gazebo GUI.
 
 ### my_controller
 
-This package is responsible for controlling the robot. The [controller file](src/my_controller/my_controller/controller.py) is a Python script that subscribes to the topic `/scan` and publishes to the topic `/cmd_vel`. The controller uses the LIDAR sensor to detect how close the walls are.
+This package is responsible for controlling the robot. The [controller file](assign1/src/my_controller/my_controller/controller.py) is a Python script that subscribes to the topic `/scan` and publishes to the topic `/cmd_vel`. The controller uses the LIDAR sensor to detect how close the walls are.
 
 Two nodes were created:
 
@@ -68,7 +68,7 @@ When the robot first spawns, only the `x` and `y` coordinates are random, but th
 Question mark shaped, strait line below, imperfect circle above, circle ends in round shape, bottom is straight and edgy shape.
 
 <p align="center">
-  <img src="report/images/world.png" width="300" title="World">
+  <img src="assign1/report/images/world.png" width="300" title="World">
 </p>
 
 The robot spawns in a random position and orientation inside the roundish part, at the top of the world.
