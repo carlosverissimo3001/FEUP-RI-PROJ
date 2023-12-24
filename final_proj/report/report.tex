@@ -4,16 +4,15 @@
 \usepackage{cite}
 \usepackage{amsmath,amssymb,amsfonts}
 \usepackage{algorithmic}
-\usepackage{hyperref}
 \usepackage{graphicx}
 \usepackage{textcomp}
+\usepackage{hyperref}
 \usepackage{xcolor}
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 \begin{document}
 
-\title{Humanoid Sprinting and Stopping DRL\\
-}
+\title{Humanoid Sprinting and Stopping DRL}
 
 \author{
 
@@ -43,35 +42,27 @@
 
 \begin{abstract}
 
-
-
 \end{abstract}
 
 \begin{IEEEkeywords}
-
-    RoboCup, RoboCup 3D Simulation League, Reinforcement Learning, Humanoid Sprinting, Humanoid Stopping, Soccer
-
+RoboCup, RoboCup 3D Simulation League, Reinforcement Learning, Humanoid Sprinting, Humanoid Stopping, Soccer
 \end{IEEEkeywords}
 
 \section{Introduction}
 
-Reinforcement Learning (RL) is a machine learning field in which agents learn optimal behaviors through trial-and-error
-interactions with their environment, with the goal of maximizing rewards and minimizing punishments.
+Reinforcement learning (RL) is a machine learning field in which agents learn optimal behaviours through trial-and-error interactions with their environment to maximize rewards and minimize punishments.
 
-The RoboCup, which began in 1997, is a well-known platform for promoting robots and AI by pushing participants with tasks such
-as soccer, rescue, and home care. \cite{robocup97}.
+The RoboCup, which began in 1997, is a well-known platform for promoting robots and AI by pushing participants with tasks such as soccer, rescue, and home care. \cite{robocup97}.
 
-This article digs into the RoboCup's 3D Simulation League, introduced in 2004. The league evolved from using simple spheres to humanoid robots and
-now uses a simulated version of the NAO robot, a 58-cm-tall robot with 25 degrees of freedom (DOF) \cite{naorobot}, as the robot model.
+This article digs into RoboCup's 3D Simulation League, introduced in 2004. The league evolved from using simple spheres to humanoid robots and now uses a simulated version of the NAO robot, a 58-cm-tall robot with 25 degrees of freedom (DOF) \cite{naorobot}, as the robot model.
 
-To enforece physics laws, coordinate communications between the server and clients and to officiate the game, the league uses the SimSpark simulator.
+To enforce physics laws, coordinate communications between the server and clients, and officiate the game, the league uses the SimSpark simulator.
 
-Sprinting is an important feature of robotic soccer and a key role in team success. This paper also focuses on the difficult
-problem of stopping a run without falling, a feat that necessitates detailed control over the robot's numerous joints and sensors.
+Sprinting is an important feature of robotic soccer and plays a key role in team success. This paper also focuses on the difficult problem of stopping a run without falling, a feat that necessitates detailed control over the robot's numerous joints and sensors.
 
 This study focuses on improving humanoid robot running and halting in the RoboCup 3D Simulation League.
 Recognizing the intricacy and significance of these talents in robotic soccer, we intend to expand on previous advances in the field.
-Our primary goal is to create solid, reliable techniques for accelerating and decelerating without falling, by making use of the comprehensive control
+Our primary goal is to create solid, reliable techniques for accelerating and decelerating without falling by making use of comprehensive control
 of the robot's joints and sensors.
 
 Subsequent sections detail related works (Section \ref{Related Work}), our methodology (Section \ref{Methodology}),
@@ -88,7 +79,6 @@ concluding with future directions for this field (Section \ref{Conclusions and F
 \section{Conclusions and Future Work}\label{Conclusions and Future Work}
 
 \section{Acknowledgments}\label{Acknowledgments}
-
 
 \begin{thebibliography}{00}
     \bibitem{lau2023fc}Lau, N., Reis, L., Simoes, D., Abreu, M., Silva, T. \& Resende, F. FC Portugal 3D Simulation Team: Team Description Paper 2020.  (2023)
