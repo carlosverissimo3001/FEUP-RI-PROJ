@@ -4,17 +4,10 @@
 \usepackage{cite}
 \usepackage{amsmath,amssymb,amsfonts}
 \usepackage{algorithmic}
+\usepackage{hyperref}
 \usepackage{graphicx}
 \usepackage{textcomp}
-\usepackage{hyperref}
 \usepackage{xcolor}
-\usepackage{float}
-
-\usepackage{tabularx,booktabs}
-\newcolumntype{C}{>{\centering\arraybackslash}X}
-\setlength{\extrarowheight}{1pt} % for a bit more open "look"
-\usepackage{graphicx}
-
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 \begin{document}
@@ -56,53 +49,53 @@
 
 \begin{IEEEkeywords}
 
-RoboCup, RoboCup 3D Simulation League, Deep Reinforcement Learning, Humanoid Sprinting, Humanoid Stopping
+    RoboCup, RoboCup 3D Simulation League, Reinforcement Learning, Humanoid Sprinting, Humanoid Stopping, Soccer
 
 \end{IEEEkeywords}
 
 \section{Introduction}
 
-The RoboCup is an international robotics competition founded in 1997 with the main goal of promoting robotics and AI research,
-by providing a standard problem where a wide range of technologies can be integrated and examined.
-The RoboCup Federation organizes a variety of competitions, including soccer, rescue, and home assistance.
-The soccer competition is the most popular one, and it is divided into several leagues.
+Reinforcement Learning (RL) is a machine learning field in which agents learn optimal behaviors through trial-and-error
+interactions with their environment, with the goal of maximizing rewards and minimizing punishments.
 
-This research paper focuses on the Simulation League in which independent software agents play on a virtual soccer
-field, more specifically on the 3D simulation league, where the agents are based on the NAO humanoid robot.
+The RoboCup, which began in 1997, is a well-known platform for promoting robots and AI by pushing participants with tasks such
+as soccer, rescue, and home care. \cite{robocup97}.
 
-Sprinting is a fundamental skill in soccer, and it is a key factor in the success of a team as it allows
-the team to quickly move the ball towards the opponent's goal.
+This article digs into the RoboCup's 3D Simulation League, introduced in 2004. The league evolved from using simple spheres to humanoid robots and
+now uses a simulated version of the NAO robot, a 58-cm-tall robot with 25 degrees of freedom (DOF) \cite{naorobot}, as the robot model.
 
-Reinforcement Learning (RL) is a machine learning technique that allows an agent to learn by
-interacting with its environment. The agent learns to achieve a goal in an uncertain,
-potentially complex environment. Agents get rewarded for performing correct actions and punished for
-performing incorrect ones.
+To enforece physics laws, coordinate communications between the server and clients and to officiate the game, the league uses the SimSpark simulator.
 
-The main goal of this research paper is to develop a Deep Reinforcement Learning (DRL) agent
-that is able to sprint and stop in a simulated soccer environment.
+Sprinting is an important feature of robotic soccer and a key role in team success. This paper also focuses on the difficult
+problem of stopping a run without falling, a feat that necessitates detailed control over the robot's numerous joints and sensors.
 
+This study focuses on improving humanoid robot running and halting in the RoboCup 3D Simulation League.
+Recognizing the intricacy and significance of these talents in robotic soccer, we intend to expand on previous advances in the field.
+Our primary goal is to create solid, reliable techniques for accelerating and decelerating without falling, by making use of the comprehensive control
+of the robot's joints and sensors.
 
-\section{Related Work}
+Subsequent sections detail related works (Section \ref{Related Work}), our methodology (Section \ref{Methodology}),
+the significant results and their implications (Section \ref{Results and Discussion}),
+concluding with future directions for this field (Section \ref{Conclusions and Future Work})
 
-\section{Methodology}
-
-\section{Results and Discussion}
-
-\section{Conclusions and Future Work}
-
-\section{Acknowledgments}
+\section{Related Work}\label{Related Work}
 
 
-%\begin{thebibliography}{00}
-%\bibitem{b1} G. Eason, B. Noble, and I. N. Sneddon, ``On certain integrals of Lipschitz-Hankel type involving products of Bessel functions,'' Phil. Trans. Roy. Soc. London, vol. A247, pp. 529--551, April 1955.
-%\bibitem{b2} J. Clerk Maxwell, A Treatise on Electricity and Magnetism, 3rd ed., vol. 2. Oxford: Clarendon, 1892, pp.68--73.
-%\bibitem{b3} I. S. Jacobs and C. P. Bean, ``Fine particles, thin films and exchange anisotropy,'' in Magnetism, vol. III, G. T. Rado and H. Suhl, Eds. New York: Academic, 1963, pp. 271--350.
-%\bibitem{b4} K. Elissa, ``Title of paper if known,'' unpublished.
-%\bibitem{b5} R. Nicole, ``Title of paper with only first word capitalized,'' J. Name Stand. Abbrev., in press.
-%\bibitem{b6} Y. Yorozu, M. Hirano, K. Oka, and Y. Tagawa, ``Electron spectroscopy studies on magneto-optical media and plastic substrate interface,'' IEEE Transl. J. Magn. Japan, vol. 2, pp. 740--741, August 1987 [Digests 9th Annual Conf. Magnetics Japan, p. 301, 1982].
-%\bibitem{b7} M. Young, The Technical Writer's Handbook. Mill Valley, CA: University Science, 1989.
-%\end{thebibliography}
+\section{Methodology}\label{Methodology}
 
-\appendices
+\section{Results and Discussion}\label{Results and Discussion}
+
+\section{Conclusions and Future Work}\label{Conclusions and Future Work}
+
+\section{Acknowledgments}\label{Acknowledgments}
+
+
+\begin{thebibliography}{00}
+    \bibitem{lau2023fc}Lau, N., Reis, L., Simoes, D., Abreu, M., Silva, T. \& Resende, F. FC Portugal 3D Simulation Team: Team Description Paper 2020.  (2023)
+    \bibitem{10.1007/978-3-030-35699-6_1}Abreu, M., Reis, L. \& Lau, N. Learning to Run Faster in a Humanoid Robot Soccer Environment Through Reinforcement Learning. {\em RoboCup 2019: Robot World Cup XXIII}. pp. 3-15 (2019)
+    \bibitem{10.1007/978-3-030-36150-1_44}Simões, D., Amaro, P., Silva, T., Lau, N. \& Reis, L. Learning Low-Level Behaviors and High-Level Strategies in Humanoid Soccer. {\em Robot 2019: Fourth Iberian Robotics Conference}. pp. 537-548 (2020)
+    \bibitem{naorobot} Nao the Humanoid and Programmable Robot, \href{www.aldebaran.com/en/nao}{www.aldebaran.com/en/nao}. Last accessed 24 Dec 2023
+    \bibitem{robocup97} Noda, I., Suzuki, S. J., Matsubara, H., Asada, M., Kitano, H.: RoboCup-97: The first robot world cup soccer games and conferences. AI magazine 19(3), 49–49 (1998)
+\end{thebibliography}
 
 \end{document}
