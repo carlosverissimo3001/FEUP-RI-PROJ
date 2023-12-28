@@ -56,6 +56,12 @@ The RoboCup, which began in 1997, is a well-known platform for promoting robots 
 
 This article digs into RoboCup's 3D Simulation League, introduced in 2004. The league evolved from using simple spheres to humanoid robots and now uses a simulated version of the NAO robot, a 58-cm-tall robot with 25 degrees of freedom (DOF) \cite{naorobot}, as the robot model.
 
+\begin{figure}[htbp]
+    \centerline{\includegraphics[width=0.35\textwidth]{images/robocup3d.png}}
+    \caption{RoboCup 3D Simulation League.}
+    \label{fig:robocup3d}
+\end{figure}
+
 To enforce physics laws, coordinate communications between the server and clients, and officiate the game, the league uses the SimSpark simulator.
 
 Sprinting is an important feature of robotic soccer and plays a key role in team success. This paper also focuses on the difficult problem of stopping a run without falling, a feat that necessitates detailed control over the robot's numerous joints and sensors.
@@ -71,6 +77,23 @@ concluding with future directions for this field (Section \ref{Conclusions and F
 
 \section{Related Work}\label{Related Work}
 
+Yearly held in different countries, the RoboCup, and, in particular, its 3D Simulated Soccer League, has been a platform for the development of new techniques and algorithms in the field of robotics and artificial intelligence.
+Teams that wish to participate in the league must submit a Team Description Paper (TDP) that describes their team's research and development efforts in the previous years.
+
+Papers from FC Portugal were studied to understand the state of the art in the field of humanoid sprinting and stopping.
+
+In 2020, FC Portugal's TDP \cite{lau2020fc} introduced two new skills: running and sprinting. These skills were learned using
+a Proximal Policy Optimization (PPO) reinforcement learning algorithm.
+
+All joints but the head were used to control the robot's movements and angles are controlled using a proportional controller.
+
+The sprinting skill is less focused on turning and more on running in a straight line and ends in one of three ways: 
+the robot kicks the ball, the robot transitions into walking, or the robot stops.
+
+When running, the outcomes are the same as when sprinting, except that the robot does kick the ball.
+
+A paper by Abreu et al. \cite{10.1007/978-3-030-35699-6_1} describes the team's efforts to leverage the Proximo Policy Optimization (PPO) 
+algorithm using information provided by the simulator to learn how to run faster, in a stable manner, and stopping.
 
 \section{Methodology}\label{Methodology}
 
@@ -81,11 +104,10 @@ concluding with future directions for this field (Section \ref{Conclusions and F
 \section{Acknowledgments}\label{Acknowledgments}
 
 \begin{thebibliography}{00}
-    \bibitem{lau2023fc}Lau, N., Reis, L., Simoes, D., Abreu, M., Silva, T. \& Resende, F. FC Portugal 3D Simulation Team: Team Description Paper 2020.  (2023)
+    \bibitem{lau2020fc}Lau, N., Reis, L., Simoes, D., Abreu, M., Silva, T. \& Resende, F. FC Portugal 3D Simulation Team: Team Description Paper 2020.  (2023)
     \bibitem{10.1007/978-3-030-35699-6_1}Abreu, M., Reis, L. \& Lau, N. Learning to Run Faster in a Humanoid Robot Soccer Environment Through Reinforcement Learning. {\em RoboCup 2019: Robot World Cup XXIII}. pp. 3-15 (2019)
-    \bibitem{10.1007/978-3-030-36150-1_44}Simões, D., Amaro, P., Silva, T., Lau, N. \& Reis, L. Learning Low-Level Behaviors and High-Level Strategies in Humanoid Soccer. {\em Robot 2019: Fourth Iberian Robotics Conference}. pp. 537-548 (2020)
     \bibitem{naorobot} Nao the Humanoid and Programmable Robot, \href{www.aldebaran.com/en/nao}{www.aldebaran.com/en/nao}. Last accessed 24 Dec 2023
-    \bibitem{robocup97} Noda, I., Suzuki, S. J., Matsubara, H., Asada, M., Kitano, H.: RoboCup-97: The first robot world cup soccer games and conferences. AI magazine 19(3), 49–49 (1998)
+    \bibitem{robocup97} Noda, I., Suzuki, S. J., Matsubara, H., Asada, M., Kitano, H.: RoboCup-97: The first robot world cup soccer games and conferences. AI magazine 19(3), 49-49 (1998)
 \end{thebibliography}
 
 \end{document}
