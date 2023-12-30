@@ -176,7 +176,7 @@ class Run_Forward(gym.Env):
 
         # Later check if tilted forward
 
-        reward_points += 4 * 6.1395 * (robot.cheat_abs_pos[0] - self.lastx)
+        reward_points += 5 * 4 * 6.1395 * (robot.cheat_abs_pos[0] - self.lastx)
         self.lastx = robot.cheat_abs_pos[0]
 
         print("reward_points = ", reward_points)
@@ -244,7 +244,7 @@ class Train(Train_Base):
         n_envs = min(32, os.cpu_count())
         n_steps_per_env = 512  # RolloutBuffer is of size (n_steps_per_env * n_envs)
         minibatch_size = 64  # should be a factor of (n_steps_per_env * n_envs)
-        total_steps = 30000000
+        total_steps = 30000000 / 1000
         learning_rate = 3e-4
         folder_name = f'Run_Forward_R{self.robot_type}'
         model_path = f'./scripts/gyms/logs/{folder_name}/'
@@ -271,7 +271,7 @@ class Train(Train_Base):
                         learning_rate=learning_rate, device="cpu")
 
         model_path = self.learn_model(model, total_steps, model_path, eval_env=eval_env, eval_freq=n_steps_per_env * 20,
-                                      save_freq=n_steps_per_env * 200, backup_env_file=__file__)
+                                      save_freq=n_steps_per_env * 1, backup_env_file=__file__, export_name="export" + folder_name)
 
         env.close()
         eval_env.close()
