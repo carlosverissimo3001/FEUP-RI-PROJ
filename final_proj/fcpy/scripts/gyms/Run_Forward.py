@@ -178,9 +178,11 @@ class Run_Forward(gym.Env):
         reward_points += abs(robot.joints_speed[robot.J_LKNEE])/2 + abs(robot.joints_speed[robot.J_RKNEE])/2
 
         # Later check if tilted forward
+        r = self.player.world.robot
+        reward_points += 5 * 4 * 6.1395 * (r.cheat_abs_pos[0] - self.lastx)
+        self.lastx = r.cheat_abs_pos[0]
 
-        reward_points += 5 * 4 * 6.1395 * (robot.cheat_abs_pos[0] - self.lastx)
-        self.lastx = robot.cheat_abs_pos[0]
+        print(reward_points)
 
         return reward_points
 
