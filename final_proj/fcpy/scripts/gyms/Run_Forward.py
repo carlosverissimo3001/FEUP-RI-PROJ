@@ -166,6 +166,8 @@ class Run_Forward(gym.Env):
         if robot.joints_position[robot.J_RARM_FRONT] * robot.joints_position[robot.J_LLEG_FRONT] < 0:
             reward_points += 4 * 6.1395
 
+        reward_points -= 20/(0.1 + robot.cheat_abs_pos[0])
+
         # is moving <=> + reward
         # Arms, legs knees and feet should have movement
 
@@ -271,7 +273,7 @@ class Train(Train_Base):
                         learning_rate=learning_rate, device="cpu")
 
         model_path = self.learn_model(model, total_steps, model_path, eval_env=eval_env, eval_freq=n_steps_per_env * 20,
-                                      save_freq=n_steps_per_env * 1, backup_env_file=__file__, export_name="export" + folder_name)
+                                      save_freq=n_steps_per_env * 1, backup_env_file=__file__, export_name=folder_name)
 
         env.close()
         eval_env.close()
