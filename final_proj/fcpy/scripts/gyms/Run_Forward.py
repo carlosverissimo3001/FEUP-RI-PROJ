@@ -166,7 +166,8 @@ class Run_Forward(gym.Env):
         if robot.joints_position[robot.J_RARM_FRONT] * robot.joints_position[robot.J_LLEG_FRONT] < 0:
             reward_points += 4 * 6.1395
 
-        reward_points -= 20/(0.1 + robot.cheat_abs_pos[0])
+        # reward_points -= 20/(0.1 + robot.cheat_abs_pos[0])
+        reward_points -= robot.loc_torso_inclination / 6.1395
 
         # is moving <=> + reward
         # Arms, legs knees and feet should have movement
@@ -180,8 +181,6 @@ class Run_Forward(gym.Env):
 
         reward_points += 5 * 4 * 6.1395 * (robot.cheat_abs_pos[0] - self.lastx)
         self.lastx = robot.cheat_abs_pos[0]
-
-        print("reward_points = ", reward_points)
 
         return reward_points
 
@@ -231,7 +230,7 @@ class Run_Forward(gym.Env):
         self.lastx = r.cheat_abs_pos[0]
 
         # terminal state: the robot is falling or timeout
-        terminal = r.cheat_abs_pos[2] < 0.3 or self.step_counter > 300
+        terminal = r.cheat_abs_pos[2] < 0.0 or self.step_counter > 300
 
         return self.observe(), self.reward(r), terminal, {}
 
@@ -243,10 +242,10 @@ class Train(Train_Base):
     def train(self, args):
 
         # --------------------------------------- Learning parameters
-        n_envs = min(32, os.cpu_count())
+        n_envs = 3#min(32, os.cpu_count())
         n_steps_per_env = 512  # RolloutBuffer is of size (n_steps_per_env * n_envs)
         minibatch_size = 64  # should be a factor of (n_steps_per_env * n_envs)
-        total_steps = 30000000 / 1000
+        total_steps = 30000000 / 10000
         learning_rate = 3e-4
         folder_name = f'Run_Forward_R{self.robot_type}'
         model_path = f'./scripts/gyms/logs/{folder_name}/'

@@ -493,5 +493,5 @@ class Export_Callback(BaseCallback):
     def _on_step(self) -> bool:
         if self.n_calls % self.freq == 0:
             path = os.path.join(self.load_path, f"model_{self.num_timesteps}_steps.zip")
-            Train_Base.export_model(path, f"./scripts/gyms/logs/{self.export_name}/{self.export_name}" + ".py")
+            Train_Base.export_model(path, f"./scripts/gyms/logs/{self.export_name}/{self.export_name}" + ".py", add_sufix=False)
         return True # If the callback returns False, training is aborted early
