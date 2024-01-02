@@ -178,11 +178,8 @@ class Run_Forward(gym.Env):
         reward_points += abs(robot.joints_speed[robot.J_LKNEE])/2 + abs(robot.joints_speed[robot.J_RKNEE])/2
 
         # Later check if tilted forward
-        r = self.player.world.robot
-        reward_points += 5 * 4 * 6.1395 * (r.cheat_abs_pos[0] - self.lastx)
-        self.lastx = r.cheat_abs_pos[0]
-
-        print(reward_points)
+        reward_points += 5 * 4 * 6.1395 * (robot.loc_torso_position[0] - self.lastx)
+        self.lastx = robot.loc_torso_position[0]
 
         return reward_points
 
@@ -229,10 +226,8 @@ class Run_Forward(gym.Env):
         self.sync()  # run simulation step
         self.step_counter += 1
 
-        self.lastx = r.cheat_abs_pos[0]
-
         # terminal state: the robot is falling or timeout
-        terminal = r.cheat_abs_pos[2] < 0.0 or self.step_counter > 300
+        terminal = r.loc_head_z < 0.1 or self.step_counter > 300
 
         return self.observe(), self.reward(r), terminal, {}
 
