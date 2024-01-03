@@ -87,15 +87,41 @@ a Proximal Policy Optimization (PPO) reinforcement learning algorithm.
 
 All joints but the head were used to control the robot's movements and angles are controlled using a proportional controller.
 
-The sprinting skill is less focused on turning and more on running in a straight line and ends in one of three ways: 
+The sprinting skill is less focused on turning and more on running in a straight line and ends in one of three ways:
 the robot kicks the ball, the robot transitions into walking, or the robot stops.
 
 When running, the outcomes are the same as when sprinting, except that the robot does kick the ball.
 
-A paper by Abreu et al. \cite{10.1007/978-3-030-35699-6_1} describes the team's efforts to leverage the Proximo Policy Optimization (PPO) 
+A paper by Abreu et al. \cite{10.1007/978-3-030-35699-6_1} describes the team's efforts to leverage the Proximo Policy Optimization (PPO)
 algorithm using information provided by the simulator to learn how to run faster, in a stable manner, and stopping.
 
+The reseachers used an implementation of the PPO algorithm provided by OpenAI's Baselines library, which involved
+clipped surrogate objective and alternating between data sampling and stochastic gradient ascent. The authors adapted hyperparameters from OpenAI's work with a
+3D humanoid model in mujoco, making adjustments for their specific tasks.
+
+In regards to the experimental setup and testing, the setups were the same for the spriting behaviour: the robot is placed near the left goal, facing the other
+goal.
+
+The initial pose is shown in figure \ref{fig:initial_pose}.
+
+\begin{figure}[htbp]
+    \centerline{\includegraphics[width=0.15\textwidth]{images/initial_pose.png}}
+    \caption{Initial pose.}
+    \label{fig:initial_pose}
+\end{figure}
+
+The robot's objective is to run as fast as possible, in a straight line, and the reward is based on it's torso's x-coordinate difference
+from the last step. The more the robot runs, the higher the reward.
+
+The stopping behaviour was only trained after optimizing the running behaviour.
+The robot is placed in the same initial pose as before, and runs for some time until the stopping behaviour is triggered.
+
+
 \section{Methodology}\label{Methodology}
+
+\section{Simulator and Agent}\label{Simulator and Agent}
+
+\section{State and Action Space}\label{State and Action Space}
 
 \section{Results and Discussion}\label{Results and Discussion}
 
