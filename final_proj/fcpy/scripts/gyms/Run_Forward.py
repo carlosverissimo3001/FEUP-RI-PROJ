@@ -131,6 +131,7 @@ class Run_Forward(gym.Env):
 
         # memory variables
         self.lastx = 0
+        self.lastxt = 0
         self.act = np.zeros(self.no_of_actions, np.float32)
 
         return self.observe(True)
@@ -182,10 +183,10 @@ class Run_Forward(gym.Env):
             reward_points += 5 * 4 * 6.1395
 
         # TODO: CHECK IF ROBOT IS MOVING FORWARD cheat_abs_pos does not work
-        reward_points += 5 * 4 * 6.1395 * (robot.cheat_abs_pos[0] - self.lastx)
-        self.lastx = robot.cheat_abs_pos[0]
-
-        
+        reward_points += 5 * 4 * 6.1395 * (robot.loc_head_position[0] - self.lastx)
+        reward_points += 5 * 4 * 6.1395 * (robot.loc_torso_position[0] - self.lastxt)
+        self.lastx = robot.loc_head_position[0]
+        self.lastxt = robot.loc_torso_position[0]
 
         return reward_points
 
@@ -233,7 +234,7 @@ class Run_Forward(gym.Env):
         self.step_counter += 1
 
         # terminal state: the robot is falling or timeout
-        terminal = r.loc_head_z < 0.2 or self.step_counter > 300
+        terminal = r.loc_torso_position[2] < 0.2 or self.step_counter > 300 or r.loc_head_position[2] < 0.2
 
         return self.observe(), self.reward(r), terminal, {}
 
