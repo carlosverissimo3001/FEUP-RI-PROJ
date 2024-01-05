@@ -27,6 +27,7 @@ class Run_Forward(gym.Env):
         self.step_obj: Step = self.player.world.robot.behavior.get_custom_behavior_object(
             "Step")  # Step behavior object
 
+        print(self.step_obj)
         # State space
         obs_size = 70
         self.obs = np.zeros(obs_size, np.float32)
@@ -132,6 +133,7 @@ class Run_Forward(gym.Env):
         # memory variables
         self.lastx = 0
         self.lastxt = 0
+        self.lastyh = 0
         self.act = np.zeros(self.no_of_actions, np.float32)
 
         return self.observe(True)
@@ -167,8 +169,12 @@ class Run_Forward(gym.Env):
         if robot.joints_position[robot.J_RARM_FRONT] * robot.joints_position[robot.J_LLEG_FRONT] < 0:
             reward_points += 4 * 6.1395
 
-        # reward_points -= 20/(0.1 + robot.cheat_abs_pos[0])
+        reward_points -= 10/(0.1 + robot.loc_head_position[2])
+        reward_points -= 10/(0.1 + robot.loc_torso_position[2])
         reward_points -= robot.loc_torso_inclination / 6.1395
+
+        if(self.lastyh > 0 and (self.lastyh - robot.loc_head_position[1]) == 0):
+            reward_points += 100
 
         # is moving <=> + reward
         # Arms, legs knees and feet should have movement
@@ -179,14 +185,22 @@ class Run_Forward(gym.Env):
         reward_points += abs(robot.joints_speed[robot.J_LKNEE])/2 + abs(robot.joints_speed[robot.J_RKNEE])/2
 
         # Later check if tilted forward
-        if robot.loc_torso_pitch > 0:
+        if robot.loc_torso_pitch >= 0:
             reward_points += 5 * 4 * 6.1395
 
         # TODO: CHECK IF ROBOT IS MOVING FORWARD cheat_abs_pos does not work
-        reward_points += 5 * 4 * 6.1395 * (robot.loc_head_position[0] - self.lastx)
-        reward_points += 5 * 4 * 6.1395 * (robot.loc_torso_position[0] - self.lastxt)
+        if(self.lastx > 0 and self.lastxt > 0):
+            if ((robot.loc_head_position[0] - self.lastx) <0 or (robot.loc_torso_position[0] - self.lastxt) < 0):
+                reward_points -= 1000
+            else:
+                reward_points += 5 * 4 * 6.1395 * (robot.loc_head_position[0] - self.lastx)
+                reward_points += 5 * 4 * 6.1395 * (robot.loc_torso_position[0] - self.lastxt)
+
         self.lastx = robot.loc_head_position[0]
         self.lastxt = robot.loc_torso_position[0]
+        self.lastyh = robot.loc_head_position[1]
+
+        print(robot.cheat_abs_pos)
 
         return reward_points
 
@@ -234,7 +248,7 @@ class Run_Forward(gym.Env):
         self.step_counter += 1
 
         # terminal state: the robot is falling or timeout
-        terminal = r.loc_torso_position[2] < 0.2 or self.step_counter > 300 or r.loc_head_position[2] < 0.2
+        terminal = r.loc_torso_position[2] < 0.2 or self.step_counter > 300 or r.loc_head_position[2] < 0.5
 
         return self.observe(), self.reward(r), terminal, {}
 
@@ -249,7 +263,7 @@ class Train(Train_Base):
         n_envs = 1#min(32, os.cpu_count())
         n_steps_per_env = 512  # RolloutBuffer is of size (n_steps_per_env * n_envs)
         minibatch_size = 64  # should be a factor of (n_steps_per_env * n_envs)
-        total_steps = 30000000 / 10000
+        total_steps = 30000000 / 1000
         learning_rate = 3e-4
         folder_name = f'Run_Forward_R{self.robot_type}'
         model_path = f'./scripts/gyms/logs/{folder_name}/'
