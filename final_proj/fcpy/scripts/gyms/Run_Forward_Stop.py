@@ -145,7 +145,7 @@ class Run_Forward(gym.Env):
         Draw.clear_all()
         self.player.scom.close()
 
-    def reward(self, robot) -> float:
+    def reward_run(self, robot) -> float:
         reward_points = 0
 
         # arm -> body -> arm => same plane means more reward
@@ -171,13 +171,27 @@ class Run_Forward(gym.Env):
         # Arms, legs knees and feet should have movement
         reward_points += self.reward_join_movement(robot)
 
-        # check if tilted backwards
-        if robot.loc_torso_pitch <= 0:
+        # check if tilted forward
+        if robot.loc_torso_pitch < 0:
             # print("tilted backwards")
             reward_points -= 5 * 4
 
-        # This is tested and works the same as cheat abs pos
+        # This is tested as works the same as cheat abs pos
         reward_points += 20 * 4 * (robot.loc_head_position[0] - self.lastx)
+        self.lastx = robot.loc_head_position[0]
+
+        return reward_points
+
+    def reward_stop(self, robot) -> float:
+        reward_points = 0
+
+        # check if tilted forward
+        reward_points += 100 - abs(robot.loc_torso_pitch)
+
+        reward_points += 100 * abs(robot.loc_head_position[2])
+
+        # This is tested as works the same as cheat abs pos
+        reward_points -= 20 * (robot.loc_head_position[0] - self.lastx)
         self.lastx = robot.loc_head_position[0]
 
         return reward_points
@@ -238,7 +252,10 @@ class Run_Forward(gym.Env):
         # terminal state: the robot is falling or timeout
         terminal = self.step_counter > 300 or r.loc_head_position[2] < 0.2
 
-        return self.observe(), self.reward(r), terminal, {}
+        if self.step_counter < 75:
+            return self.observe(), self.reward_run(r), terminal, {}
+
+        return self.observe(), self.reward_stop(r), terminal, {}
 
 
 class Train(Train_Base):

@@ -336,7 +336,7 @@ class World_Parser():
                         self.world.ball_last_seen = self.world.time_local_ms
 
                     elif tag==b'mypos':
-
+                        print("\n\n#### trying to read robot abs pos\n\n", self.exp[end:end+20])
                         self.world.robot.cheat_abs_pos[0], end = self.read_float(end+1)
                         self.world.robot.cheat_abs_pos[1], end = self.read_float(end+1)
                         self.world.robot.cheat_abs_pos[2], end = self.read_float(end+1)
@@ -412,7 +412,7 @@ class World_Parser():
                         if np.isnan(l).any():
                             self.world.log(f"{self.LOG_PREFIX}Received field line with NaNs {l}")
                         else:
-                            self.world.line_count += 1 #accept field line if there are no NaNs
+                            self.world.line_count += 1 # accept field line if there are no NaNs
                         
                     else:
                         self.world.log(f"{self.LOG_PREFIX}Unknown tag inside 'see': {tag} at {end}, \nMsg: {exp.decode()}")
