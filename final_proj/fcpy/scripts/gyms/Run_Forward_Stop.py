@@ -177,7 +177,7 @@ class Run_Forward(gym.Env):
             reward_points -= 5 * 4
 
         # This is tested as works the same as cheat abs pos
-        reward_points += 20 * 4 * (robot.loc_head_position[0] - self.lastx)
+        reward_points += 500 * 4 * (robot.loc_head_position[0] - self.lastx)
         self.lastx = robot.loc_head_position[0]
 
         return reward_points
