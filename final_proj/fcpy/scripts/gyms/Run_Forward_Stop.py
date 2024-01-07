@@ -21,7 +21,7 @@ class Run_Forward(gym.Env):
     def __init__(self, ip, server_p, monitor_p, r_type, enable_draw) -> None:
 
         self.robot_type = r_type
-        self.player = Agent(ip, server_p, monitor_p, 1, self.robot_type, "Gym", True, enable_draw, [])
+        self.player = Agent(ip, server_p, monitor_p, 1, self.robot_type, "Gym", True, True, [])
         self.step_counter = 0  # to limit episode size
 
         self.step_obj: Step = self.player.world.robot.behavior.get_custom_behavior_object(
@@ -177,9 +177,15 @@ class Run_Forward(gym.Env):
             reward_points -= 5 * 4
 
         # This is tested as works the same as cheat abs pos
-        reward_points += 500 * 4 * (robot.loc_head_position[0] - self.lastx)
+        if(robot.loc_head_position[0] < 0):
+            reward_points += 5000 * 4 * (-robot.loc_head_position[0] + self.lastx)
+        else:
+            reward_points -= 500 * 4 * robot.loc_head_position[0] *(-1)
         self.lastx = robot.loc_head_position[0]
 
+        w = self.player.world
+        w.draw.annotation(robot.loc_head_position, str(reward_points), w.draw.Color.white, "pos", flush=True)
+        print(reward_points)
         return reward_points
 
     def reward_stop(self, robot) -> float:
@@ -265,7 +271,7 @@ class Train(Train_Base):
     def train(self, args):
 
         # --------------------------------------- Learning parameters
-        n_envs = 2#min(32, os.cpu_count())
+        n_envs = 4#min(32, os.cpu_count())
         n_steps_per_env = 512  # RolloutBuffer is of size (n_steps_per_env * n_envs)
         minibatch_size = 64  # should be a factor of (n_steps_per_env * n_envs)
         total_steps = 30000000 / 1000

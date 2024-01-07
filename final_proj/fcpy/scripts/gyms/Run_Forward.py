@@ -21,7 +21,7 @@ class Run_Forward(gym.Env):
     def __init__(self, ip, server_p, monitor_p, r_type, enable_draw) -> None:
 
         self.robot_type = r_type
-        self.player = Agent(ip, server_p, monitor_p, 1, self.robot_type, "Gym", True, enable_draw, [])
+        self.player = Agent(ip, server_p, monitor_p, 1, self.robot_type, "Gym", True, True, [])
         self.step_counter = 0  # to limit episode size
 
         self.step_obj: Step = self.player.world.robot.behavior.get_custom_behavior_object(
@@ -171,16 +171,23 @@ class Run_Forward(gym.Env):
         # Arms, legs knees and feet should have movement
         reward_points += self.reward_join_movement(robot)
 
-        # check if tilted backwards
-        if robot.loc_torso_pitch <= 0:
+        # check if tilted forward
+        if robot.loc_torso_pitch < 0:
             # print("tilted backwards")
             reward_points -= 5 * 4
 
-        # This is tested and works the same as cheat abs pos
-        reward_points += 500 * 4 * (robot.loc_head_position[0] - self.lastx)
+        # This is tested as works the same as cheat abs pos
+        if(robot.loc_head_position[0] > 0):
+            reward_points += 500 * 4 * (robot.loc_head_position[0] - self.lastx)
+        else:
+            reward_points -= 500 * 4 * robot.loc_head_position[0] *(-1)
         self.lastx = robot.loc_head_position[0]
 
+        w = self.player.world
+        w.draw.annotation(robot.loc_head_position, str(reward_points), w.draw.Color.white, "pos", flush=True)
+        print(reward_points)
         return reward_points
+
 
     def reward_join_movement(self, robot) -> float:
         reward_points = 0
