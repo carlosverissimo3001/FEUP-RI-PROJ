@@ -176,11 +176,13 @@ class Run_Forward(gym.Env):
             # print("tilted backwards")
             reward_points -= 5 * 4
 
-        # This is tested as works the same as cheat abs pos
-        if(robot.loc_head_position[0] > 0):
-            reward_points += 500 * 4 * (robot.loc_head_position[0] - self.lastx)
+        if(robot.loc_head_position[0] <= self.lastx):
+            reward_points -= 50 * 4 * abs(robot.loc_head_position[0] - self.lastx)
         else:
-            reward_points -= 500 * 4 * robot.loc_head_position[0] *(-1)
+            if(robot.loc_head_position[0] <= 0):
+                reward_points += 50 * 4 * abs(robot.loc_head_position[0] - self.lastx)
+            else:
+                reward_points += 50 * 4 * (robot.loc_head_position[0] - self.lastx)
         self.lastx = robot.loc_head_position[0]
 
         w = self.player.world
