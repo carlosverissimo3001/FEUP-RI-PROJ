@@ -121,6 +121,7 @@ class Run_Forward(gym.Env):
 
         # beam player to ground
         self.player.scom.unofficial_beam((-14, 0, r.beam_height), 0)
+        self.l = -14
         r.joints_target_speed[
             0] = 0.01  # move head to trigger physics update (rcssserver3d bug when no joint is moving)
         self.sync()
@@ -260,7 +261,9 @@ class Run_Forward(gym.Env):
         self.step_counter += 1
 
         # terminal state: the robot is falling or timeout
-        terminal = self.step_counter > 300 or r.loc_head_position[2] < 0.2
+        terminal = self.step_counter > 300 or r.loc_head_position[2] < 0.2 or r.loc_head_position[0] <= self.l
+
+        self.l = r.loc_head_position[0]
 
         if self.step_counter < 75:
             return self.observe(), self.reward_run(r), terminal, {}

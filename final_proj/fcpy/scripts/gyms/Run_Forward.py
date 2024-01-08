@@ -245,8 +245,7 @@ class Run_Forward(gym.Env):
         self.step_counter += 1
 
         # terminal state: the robot is falling or timeout
-        terminal = self.step_counter > 300 or r.loc_head_position[2] < 0.2
-
+        terminal = self.step_counter > 300 or r.loc_head_position[2] < 0.2 or r.loc_head_position[0] <= -14.5+0.01*self.step_counter
         return self.observe(), self.reward(r), terminal, {}
 
 
