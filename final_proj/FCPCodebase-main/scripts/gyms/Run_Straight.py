@@ -160,25 +160,25 @@ class Run_Straight(gym.Env):
         # arm -> body -> arm => same plane means more reward
         #   arm joints + reward for having speed
         if robot.joints_position[14] * robot.joints_position[15] < 0:
-            reward_points += (1 - (robot.joints_position[14] / 120 + robot.joints_position[15] / 120))
+            reward_points += 25 * (1 - (robot.joints_position[14] / 120 + robot.joints_position[15] / 120))
 
         # legs are coordinated
         if robot.joints_position[6] * robot.joints_position[7] < 0:
-            reward_points += (1 - (robot.joints_position[6] + robot.joints_position[7]) / 75)
+            reward_points += 25 * (1 - (robot.joints_position[6] + robot.joints_position[7]) / 75)
 
         # If right arm in front left leg in front <=> + reward
         # and vice versa
         if robot.joints_position[14] * robot.joints_position[7] < 0:
-            reward_points += 1
+            reward_points += 25
         if robot.joints_position[15] * robot.joints_position[6] < 0:
-            reward_points += 1
+            reward_points += 25
 
         # Arms, legs knees and feet should have movement
-        reward_points += self.reward_join_movement(robot)
+        reward_points += 25 * self.reward_join_movement(robot)
 
         if robot.loc_torso_pitch > 0:
             # print("tilted forwards")
-            reward_points += 1
+            reward_points += 100
 
         w = self.player.world
         # draw_location = robot.loc_head_position[:2]
@@ -195,11 +195,11 @@ class Run_Straight(gym.Env):
 
         self.last_pos = (robot.cheat_abs_pos[0], robot.cheat_abs_pos[1], robot.cheat_abs_pos[2])
 
-        if reward_points < -1:
+        if reward_points * 100 < -1:
             w.draw.annotation(robot.cheat_abs_pos, "%.02f" % (reward_points * 100), w.draw.Color.red_dark, "true_points", flush=True)
-        elif reward_points < 1:
+        elif reward_points * 100 < 1:
             w.draw.annotation(robot.cheat_abs_pos, "%.02f" % (reward_points * 100), w.draw.Color.yellow_gold, "true_points", flush=True)
-        elif reward_points > 1:
+        elif reward_points * 100 >= 1:
             w.draw.annotation(robot.cheat_abs_pos, "%.02f" % (reward_points * 100), w.draw.Color.cyan, "true_points", flush=True)
 
         return reward_points
