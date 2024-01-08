@@ -27,7 +27,7 @@ class Run_Forward(gym.Env):
         self.step_obj: Step = self.player.world.robot.behavior.get_custom_behavior_object(
             "Step")  # Step behavior object
 
-        print(self.step_obj)
+        # print(self.step_obj)
         # State space
         obs_size = 70
         self.obs = np.zeros(obs_size, np.float32)
@@ -187,7 +187,7 @@ class Run_Forward(gym.Env):
 
         w = self.player.world
         w.draw.annotation(robot.loc_head_position, str(reward_points), w.draw.Color.white, "pos", flush=True)
-        print(reward_points)
+        # print(reward_points)
         return reward_points
 
 
@@ -245,7 +245,12 @@ class Run_Forward(gym.Env):
         self.step_counter += 1
 
         # terminal state: the robot is falling or timeout
-        terminal = self.step_counter > 300 or r.loc_head_position[2] < 0.2 or r.loc_head_position[0] <= -14.5+0.01*self.step_counter
+        linex = -15 + 0.005*self.step_counter
+        w = self.player.world
+        w.draw.line((linex, -10), (linex, 10), 3, w.draw.Color.yellow, "end line", flush=True)
+
+        terminal = self.step_counter > 300 or r.loc_head_position[2] < 0.2 or r.loc_head_position[0] <= linex
+
         return self.observe(), self.reward(r), terminal, {}
 
 
@@ -256,7 +261,7 @@ class Train(Train_Base):
     def train(self, args):
 
         # --------------------------------------- Learning parameters
-        n_envs = 2#min(32, os.cpu_count())
+        n_envs = 1#min(32, os.cpu_count())
         n_steps_per_env = 512  # RolloutBuffer is of size (n_steps_per_env * n_envs)
         minibatch_size = 64  # should be a factor of (n_steps_per_env * n_envs)
         total_steps = 30000000 / 1000

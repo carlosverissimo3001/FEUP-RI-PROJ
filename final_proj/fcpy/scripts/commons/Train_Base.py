@@ -452,7 +452,6 @@ class Train_Base():
                     break
         
         model = PPO.load(input_file)
-        print("here")
         weights = model.policy.state_dict() # dictionary containing network layers
 
         w = lambda name : weights[name].detach().cpu().numpy() # extract weights from policy
