@@ -156,29 +156,30 @@ class Run_Straight(gym.Env):
             return 0
 
         reward_points = 0
+        joint_reward_modifier = 1
 
         # arm -> body -> arm => same plane means more reward
         #   arm joints + reward for having speed
         if robot.joints_position[14] * robot.joints_position[15] < 0:
-            reward_points += 25 * (1 - (robot.joints_position[14] / 120 + robot.joints_position[15] / 120))
+            reward_points += joint_reward_modifier * (1 - (robot.joints_position[14] / 120 + robot.joints_position[15] / 120))
 
         # legs are coordinated
         if robot.joints_position[6] * robot.joints_position[7] < 0:
-            reward_points += 25 * (1 - (robot.joints_position[6] + robot.joints_position[7]) / 75)
+            reward_points += joint_reward_modifier * (1 - (robot.joints_position[6] + robot.joints_position[7]) / 75)
 
         # If right arm in front left leg in front <=> + reward
         # and vice versa
         if robot.joints_position[14] * robot.joints_position[7] < 0:
-            reward_points += 25
+            reward_points += joint_reward_modifier
         if robot.joints_position[15] * robot.joints_position[6] < 0:
-            reward_points += 25
+            reward_points += joint_reward_modifier
 
         # Arms, legs knees and feet should have movement
-        reward_points += 25 * self.reward_join_movement(robot)
+        reward_points += joint_reward_modifier * self.reward_join_movement(robot)
 
         if robot.loc_torso_pitch > 0:
             # print("tilted forwards")
-            reward_points += 100
+            reward_points += joint_reward_modifier * 5
 
         w = self.player.world
         # draw_location = robot.loc_head_position[:2]
@@ -188,7 +189,7 @@ class Run_Straight(gym.Env):
         reward_points /= 1000
 
         # go straight
-        reward_points -= (robot.cheat_abs_pos[1] - self.last_pos[1])
+        reward_points -= abs(0 - robot.cheat_abs_pos[1])
 
         # go forward
         reward_points += robot.cheat_abs_pos[0] - self.last_pos[0]
@@ -248,7 +249,7 @@ class Run_Straight(gym.Env):
         self.step_counter += 1
 
         # terminal state: the robot is falling or timeout
-        terminal = r.cheat_abs_pos[2] < 0.2 or self.step_counter > 500
+        terminal = r.cheat_abs_pos[2] < 0.33 or self.step_counter > 500
 
         return self.observe(), self.get_reward(), terminal, {}
 
@@ -264,10 +265,10 @@ class Train(Train_Base):
     def train(self, args):
 
         #--------------------------------------- Learning parameters
-        n_envs = 4 #min(16, os.cpu_count())
+        n_envs = 8 #min(16, os.cpu_count())
         n_steps_per_env = 1024  # RolloutBuffer is of size (n_steps_per_env * n_envs)
         minibatch_size = 64    # should be a factor of (n_steps_per_env * n_envs)
-        total_steps = 50000000 / 100
+        total_steps = 50000000 / 100 * 2
         learning_rate = 3e-4
         folder_name = f'Run_Straight_R{self.robot_type}'
         model_path = f'./scripts/gyms/logs/{folder_name}/'
