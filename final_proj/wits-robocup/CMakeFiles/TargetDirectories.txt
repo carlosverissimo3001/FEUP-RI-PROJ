@@ -1,0 +1,3 @@
+/home/vmuser/robocup/wits-robocup/CMakeFiles/rebuild_cache.dir
+/home/vmuser/robocup/wits-robocup/CMakeFiles/agentspark.dir
+/home/vmuser/robocup/wits-robocup/CMakeFiles/edit_cache.dir

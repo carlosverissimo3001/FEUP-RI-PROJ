@@ -128,7 +128,7 @@ class Run_Forward(gym.Env):
             self.sync()
 
         # memory variables
-        self.lastx = 0
+        self.lastx = r.cheat_abs_pos[0]
         self.act = np.zeros(self.no_of_actions, np.float32)
 
         # self.player.scom.unofficial_beam((-3, 0, r.beam_height), 0)
@@ -173,17 +173,21 @@ class Run_Forward(gym.Env):
             # print("tilted backwards")
             reward_points -= 5 * 4
 
-        if(robot.loc_head_position[0] <= self.lastx):
-            reward_points -= 50 * 4 * abs(robot.loc_head_position[0] - self.lastx)
-        else:
-            if(robot.loc_head_position[0] <= 0):
-                reward_points += 50 * 4 * abs(robot.loc_head_position[0] - self.lastx)
-            else:
-                reward_points += 50 * 4 * (robot.loc_head_position[0] - self.lastx)
-        self.lastx = robot.loc_head_position[0]
+        # if(robot.cheat_abs_pos[0] < self.lastx):
+        #     print("1 " + str(robot.cheat_abs_pos[0]) + " " + str(self.lastx))
+        #     reward_points -= 50 * 4 * abs(robot.cheat_abs_pos[0] - self.lastx)
+        # else:
+        #     if(robot.cheat_abs_pos[0] <= 0):
+        #         print("2 " + str(robot.cheat_abs_pos[0]) + " " + str(self.lastx))
+        #         reward_points += 50 * 4 * abs(robot.cheat_abs_pos[0] - self.lastx)
+        #     else:
+        #         print("3 " + str(robot.cheat_abs_pos[0]) + " " + str(self.lastx))
+        #         reward_points += 50 * 4 * (robot.cheat_abs_pos[0] - self.lastx)
+        reward_points += 5*4*(robot.cheat_abs_pos[0] - self.lastx)
+        self.lastx = robot.cheat_abs_pos[0]
 
         w = self.player.world
-        w.draw.annotation(robot.loc_head_position, str(reward_points), w.draw.Color.white, "pos", flush=True)
+        w.draw.annotation(robot.cheat_abs_pos, str(reward_points), w.draw.Color.white, "pos", flush=True)
         # print(reward_points)
         return reward_points
 
@@ -246,7 +250,7 @@ class Run_Forward(gym.Env):
         w = self.player.world
         w.draw.line((linex, -10), (linex, 10), 3, w.draw.Color.yellow, "end line", flush=True)
 
-        terminal = self.step_counter > 300 or r.loc_head_position[2] < 0.2 or r.loc_head_position[0] <= linex
+        terminal = self.step_counter > 300 or r.cheat_abs_pos[2] < 0.2 or r.cheat_abs_pos[0] <= linex
 
         return self.observe(), self.reward(r), terminal, {}
 
