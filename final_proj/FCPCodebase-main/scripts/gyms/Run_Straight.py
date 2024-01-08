@@ -17,7 +17,7 @@ Learn how to run forward using step primitive
 - class Train:  implements algorithms to train a new model or test an existing model
 '''
 
-class Basic_Run(gym.Env):
+class Run_Straight(gym.Env):
     def __init__(self, ip, server_p, monitor_p, r_type, enable_draw) -> None:
 
         self.robot_type = r_type
@@ -101,7 +101,6 @@ class Basic_Run(gym.Env):
         self.player.scom.commit_and_send( r.get_command() )
         self.player.scom.receive()
 
-
     def reset(self):
         '''
         Reset and stabilize the robot
@@ -127,7 +126,7 @@ class Basic_Run(gym.Env):
             self.sync()
 
         # memory variables
-        self.lastx = r.cheat_abs_pos[0]
+        self.last_pos = (r.cheat_abs_pos[0], r.cheat_abs_pos[1], r.cheat_abs_pos[2])
         self.act = np.zeros(self.no_of_actions,np.float32)
 
         return self.observe(True)
@@ -138,6 +137,72 @@ class Basic_Run(gym.Env):
     def close(self):
         Draw.clear_all()
         self.player.terminate()
+
+    def reward_join_movement(self, robot) -> float:
+        reward_points = 0
+
+        reward_points += abs(robot.joints_speed[14])/2 + abs(robot.joints_speed[15])/2
+        reward_points += abs(robot.joints_speed[6])/2 + abs(robot.joints_speed[7])/2
+        reward_points += abs(robot.joints_speed[10])/2 + abs(robot.joints_speed[11])/2
+        reward_points += abs(robot.joints_speed[8])/2 + abs(robot.joints_speed[9])/2
+
+        # normalize this values
+        return reward_points / 6.1395
+
+    def get_reward(self) -> float:
+        robot = self.player.world.robot
+
+        if abs(robot.cheat_abs_pos[0] - self.last_pos[0]) < 1 / 10000:
+            return 0
+
+        reward_points = 0
+
+        # arm -> body -> arm => same plane means more reward
+        #   arm joints + reward for having speed
+        if robot.joints_position[14] * robot.joints_position[15] < 0:
+            reward_points += (1 - (robot.joints_position[14] / 120 + robot.joints_position[15] / 120))
+
+        # legs are coordinated
+        if robot.joints_position[6] * robot.joints_position[7] < 0:
+            reward_points += (1 - (robot.joints_position[6] + robot.joints_position[7]) / 75)
+
+        # If right arm in front left leg in front <=> + reward
+        # and vice versa
+        if robot.joints_position[14] * robot.joints_position[7] < 0:
+            reward_points += 1
+        if robot.joints_position[15] * robot.joints_position[6] < 0:
+            reward_points += 1
+
+        # Arms, legs knees and feet should have movement
+        reward_points += self.reward_join_movement(robot)
+
+        if robot.loc_torso_pitch > 0:
+            # print("tilted forwards")
+            reward_points += 1
+
+        w = self.player.world
+        # draw_location = robot.loc_head_position[:2]
+        # draw_location += [robot.loc_head_position[2] + 0.3]
+        # w.draw.annotation(draw_location, "%.02f" % reward_points, w.draw.Color.yellow_gold, "points", flush=True)
+
+        reward_points /= 1000
+
+        # go straight
+        reward_points -= (robot.cheat_abs_pos[1] - self.last_pos[1])
+
+        # go forward
+        reward_points += robot.cheat_abs_pos[0] - self.last_pos[0]
+
+        self.last_pos = (robot.cheat_abs_pos[0], robot.cheat_abs_pos[1], robot.cheat_abs_pos[2])
+
+        if reward_points < -1:
+            w.draw.annotation(robot.cheat_abs_pos, "%.02f" % (reward_points * 100), w.draw.Color.red_dark, "true_points", flush=True)
+        elif reward_points < 1:
+            w.draw.annotation(robot.cheat_abs_pos, "%.02f" % (reward_points * 100), w.draw.Color.yellow_gold, "true_points", flush=True)
+        elif reward_points > 1:
+            w.draw.annotation(robot.cheat_abs_pos, "%.02f" % (reward_points * 100), w.draw.Color.cyan, "true_points", flush=True)
+
+        return reward_points
 
     def step(self, action):
         
@@ -181,14 +246,11 @@ class Basic_Run(gym.Env):
 
         self.sync() # run simulation step
         self.step_counter += 1
-         
-        reward = r.cheat_abs_pos[0] - self.lastx
-        self.lastx = r.cheat_abs_pos[0]
 
         # terminal state: the robot is falling or timeout
-        terminal = r.cheat_abs_pos[2] < 0.3 or self.step_counter > 300
+        terminal = r.cheat_abs_pos[2] < 0.2 or self.step_counter > 500
 
-        return self.observe(), reward, terminal, {}
+        return self.observe(), self.get_reward(), terminal, {}
 
 
 
@@ -205,9 +267,9 @@ class Train(Train_Base):
         n_envs = 4 #min(16, os.cpu_count())
         n_steps_per_env = 1024  # RolloutBuffer is of size (n_steps_per_env * n_envs)
         minibatch_size = 64    # should be a factor of (n_steps_per_env * n_envs)
-        total_steps = 30000000
+        total_steps = 50000000 / 100
         learning_rate = 3e-4
-        folder_name = f'Basic_Run_R{self.robot_type}'
+        folder_name = f'Run_Straight_R{self.robot_type}'
         model_path = f'./scripts/gyms/logs/{folder_name}/'
 
         print("Model path:", model_path)
@@ -215,7 +277,7 @@ class Train(Train_Base):
         #--------------------------------------- Run algorithm
         def init_env(i_env):
             def thunk():
-                return Basic_Run( self.ip , self.server_p + i_env, self.monitor_p_1000 + i_env, self.robot_type, False )
+                return Run_Straight( self.ip , self.server_p + i_env, self.monitor_p_1000 + i_env, self.robot_type, True )
             return thunk
 
         servers = Server( self.server_p, self.monitor_p_1000, n_envs+1 ) #include 1 extra server for testing
@@ -245,7 +307,7 @@ class Train(Train_Base):
 
         # Uses different server and monitor ports
         server = Server( self.server_p-1, self.monitor_p, 1 )
-        env = Basic_Run( self.ip, self.server_p-1, self.monitor_p, self.robot_type, True )
+        env = Run_Straight( self.ip, self.server_p-1, self.monitor_p, self.robot_type, True )
         model = PPO.load( args["model_file"], env=env )
 
         try:

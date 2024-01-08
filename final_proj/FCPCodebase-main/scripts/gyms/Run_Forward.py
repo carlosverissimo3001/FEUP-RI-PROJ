@@ -149,7 +149,6 @@ class Run_Forward(gym.Env):
         #   arm joints + reward for having speed
         #       small to do: except when close to max amplitude (To be changed by a specific value)
 
-        # small to check: or the sum is very small
         if robot.joints_position[14] * robot.joints_position[15] < 0:
             reward_points += 4 * (1 - (robot.joints_position[14] / 120 + robot.joints_position[15] / 120))
 
