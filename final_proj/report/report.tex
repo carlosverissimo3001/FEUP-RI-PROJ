@@ -5,7 +5,9 @@
 \usepackage{amsmath,amssymb,amsfonts}
 \usepackage{algorithmic}
 \usepackage{graphicx}
+\usepackage{subfig}
 \usepackage{textcomp}
+\usepackage{subfig}
 \usepackage{hyperref}
 \usepackage{xcolor}
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
@@ -42,7 +44,7 @@
 
 \begin{abstract}
 
-This paper thoroughly examines the challenges of sprinting in the RoboCup 3D Simulation League, employing a simulated NAO robot. Our goal is to enhance the understanding of these complexities, paving the way for the development of optimized soccer-playing robots. Specifically, we concentrate on refining humanoid robot running, drawing inspiration from FC Portugal's advancements using Proximal Policy Optimization (PPO) reinforcement learning. The study reviews related works, details our methodology, and discusses key results. Emphasizing the importance of Team Description Papers (TDP) for league participation, our work aligns with the innovative spirit of RoboCup, offering insights into future directions in robotics and AI.
+    This paper thoroughly examines the challenges of sprinting in the RoboCup 3D Simulation League, employing a simulated NAO robot. Our goal is to enhance the understanding of these complexities, paving the way for the development of optimized soccer-playing robots. Specifically, we concentrate on refining humanoid robot running, drawing inspiration from FC Portugal's advancements using Proximal Policy Optimization (PPO) reinforcement learning. The study reviews related works, details our methodology, and discusses key results. Emphasizing the importance of Team Description Papers (TDP) for league participation, our work aligns with the innovative spirit of RoboCup, offering insights into future directions in robotics and AI.
 
 \end{abstract}
 
@@ -192,8 +194,25 @@ Our model training was conducted on a computer equipped with an Intel i7 10th ge
 
 In our experiments, the best-performing model achieved an average reward of 3.63, with the maximum possible reward being 7.3. This outcome indicates that while the model has learned to some extent, there is still significant room for improvement in terms of optimizing the reward function and enhancing the model's overall performance
 
+The robot's initial position is at the left goal, about 1/15 of the left half of the field, facing the right goal. On average, at the end of each episode, the robot's last position was at 4/15 of the left half of the field.
 
-The stumbling block primarily stemmed from persistent issues within the coding framework utilized. Various debugging attempts were made to rectify the problem, yet the solution remained elusive. This hiccup underscored the intricate nature of simultaneously achieving fluid locomotion and precise control. Moving forward, addressing and refining the underlying code will be a paramount focus to ensure seamless movement and the crucial ability to bring the robot to a complete stop. This experience highlights the iterative nature of robotics development and emphasizes the importance of meticulous coding for comprehensive functionality.
+Considering an average length of a soccer field of 105 meters, the robot's travelled distance was, on average, 10.5 meters, about 1/10 of the field length.
+
+Given the average episode length of 8.2 seconds, the average speed was 1.28 m/s, which is about 4.6 km/h. This speed is not comparable to that achieve by Abreu et al. \cite{10.1007/978-3-030-35699-6_1}, which was 2.5 m/s, and is more
+comparable to walking than running.
+
+In figure \ref{fig:ini-final}, we can see the robot's initial and final positions, at the beginning and end of an episode, respectively.
+
+
+\begin{figure}[hbtp]
+    \centering
+    \subfloat[Initial position]{\includegraphics[width=.48\linewidth]{images/initial_position.png}}
+    \subfloat[Final position]{\includegraphics[width=.48\linewidth]{images/final_position.png}}
+    \caption{Initial and final positions}
+    \label{fig:ini-final}
+\end{figure}
+
+We achieved a model that enabled the robot to either run or at least walk at a faster pace. However, the movement achieved was not as smooth as we had intended; it lacked a human-like fluidity. Additionally, the robot did not maintain a straight line while moving. This deviation was attributed to an issue in the reward function, which inadvertently encouraged a non-linear path. This outcome, while falling short of our ideal expectations, still represents a significant step in our understanding of robot locomotion and the complexities involved in training models for such tasks.
 
 \section{Conclusions and Future Work}\label{Conclusions and Future Work}
 
@@ -203,8 +222,8 @@ Throughout this project, we have gained extensive experience in several key area
 
 \begin{itemize}
     \item \textbf{Familiarization with Simspark}: We delved deeply into this 3D simulation platform, understanding its intricacies and leveraging its capabilities for our robotic simulations.
-   \item \textbf{Robot Learning Principles}: Our work contributed to a deeper understanding of the principles behind robot learning, particularly in the context of reinforcement learning and its application to robotic movements.
-   \item{Controlling Robot Joints: We developed skills in manipulating and controlling the NAO robot's joints, a crucial aspect of achieving desired movement patterns.}
+    \item \textbf{Robot Learning Principles}: Our work contributed to a deeper understanding of the principles behind robot learning, particularly in the context of reinforcement learning and its application to robotic movements.
+          \item{Controlling Robot Joints: We developed skills in manipulating and controlling the NAO robot's joints, a crucial aspect of achieving desired movement patterns.}
 \end{itemize}
 
 Although our project didn't fully realize the planned run-and-stop functionality, the progress made lays a strong foundation for future endeavours. The insights and expertise we have garnered through this process are invaluable and will undoubtedly fuel further advancements in robotic control and learning.
