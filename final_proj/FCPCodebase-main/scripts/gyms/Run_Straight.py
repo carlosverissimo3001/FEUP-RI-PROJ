@@ -181,21 +181,21 @@ class Run_Straight(gym.Env):
             # print("tilted forwards")
             reward_points += joint_reward_modifier * 5
 
-        w = self.player.world
-        # draw_location = robot.loc_head_position[:2]
-        # draw_location += [robot.loc_head_position[2] + 0.3]
-        # w.draw.annotation(draw_location, "%.02f" % reward_points, w.draw.Color.yellow_gold, "points", flush=True)
-
         reward_points /= 1000
 
         # go straight
-        reward_points -= abs(0 - robot.cheat_abs_pos[1])
+        if abs(robot.cheat_abs_pos[1]) > 1:
+            reward_points += 0 - abs(robot.cheat_abs_pos[1])
 
         # go forward
-        reward_points += robot.cheat_abs_pos[0] - self.last_pos[0]
+        reward_points += (robot.cheat_abs_pos[0] - self.last_pos[0])
 
         self.last_pos = (robot.cheat_abs_pos[0], robot.cheat_abs_pos[1], robot.cheat_abs_pos[2])
 
+        w = self.player.world
+
+        w.draw.line((-15, -1), (0, -1), 2, w.draw.Color.red_salmon, "down line", flush=True)
+        w.draw.line((-15, 1), (0, 1), 2, w.draw.Color.red_salmon, "up line", flush=True)
         if reward_points * 100 < -1:
             w.draw.annotation(robot.cheat_abs_pos, "%.02f" % (reward_points * 100), w.draw.Color.red_dark, "true_points", flush=True)
         elif reward_points * 100 < 1:
@@ -268,7 +268,7 @@ class Train(Train_Base):
         n_envs = 8 #min(16, os.cpu_count())
         n_steps_per_env = 1024  # RolloutBuffer is of size (n_steps_per_env * n_envs)
         minibatch_size = 64    # should be a factor of (n_steps_per_env * n_envs)
-        total_steps = 50000000 / 100 * 2
+        total_steps = 50000000
         learning_rate = 3e-4
         folder_name = f'Run_Straight_R{self.robot_type}'
         model_path = f'./scripts/gyms/logs/{folder_name}/'
@@ -308,7 +308,7 @@ class Train(Train_Base):
 
         # Uses different server and monitor ports
         server = Server( self.server_p-1, self.monitor_p, 1 )
-        env = Run_Straight( self.ip, self.server_p-1, self.monitor_p, self.robot_type, True )
+        env = Run_Straight( self.ip, self.server_p-1, self.monitor_p, self.robot_type, False )
         model = PPO.load( args["model_file"], env=env )
 
         try:
